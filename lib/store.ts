@@ -1,0 +1,4 @@
+import { demoProducts, placeholderSettings } from "@/lib/demo";
+import { supabaseServer } from "@/lib/supabase/server";
+import type { Product, Settings } from "@/types";
+export async function getStorefront():Promise<{products:Product[];settings:Settings}> { const sb=supabaseServer(); if(!sb) return {products:demoProducts,settings:placeholderSettings}; const [{data:products},{data:settings}]=await Promise.all([sb.from("products").select("*, product_images(storage_path,display_order)").eq("is_available",true).order("display_order"),sb.from("business_settings").select("*").limit(1).maybeSingle()]); return { products:(products||[]).map((p: Product & {product_images?:{storage_path:string}[]})=>{const path=p.product_images?.[0]?.storage_path;return {...p,image:path?sb.storage.from("product_images").getPublicUrl(path).data.publicUrl:undefined}}), settings:settings||placeholderSettings }; }

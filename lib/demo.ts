@@ -1,0 +1,7 @@
+import type { Product, Settings } from "@/types";
+export const demoProducts: Product[] = [
+ { id:"demo-rose",name:"Rosé Glaze",slug:"rose-glaze",description:"A sheer pink set with a luminous glazed finish.",price:2490,available_sizes:["XS","S","M","L"],inventory:8,is_available:true,display_order:1,image:"https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=900&q=85" },
+ { id:"demo-french",name:"Petit French",slug:"petit-french",description:"A soft, modern French tip for every day.",price:2290,available_sizes:["XS","S","M","L"],inventory:10,is_available:true,display_order:2,image:"https://images.unsplash.com/photo-1610992015732-2449b76344bc?auto=format&fit=crop&w=900&q=85" },
+ { id:"demo-cherry",name:"Cherry Blossom",slug:"cherry-blossom",description:"Glossy pink nails with delicate floral details.",price:2690,available_sizes:["S","M","L"],inventory:4,is_available:true,display_order:3,image:"https://images.unsplash.com/photo-1607779097040-26e80aa78e66?auto=format&fit=crop&w=900&q=85" }
+];
+export const placeholderSettings: Settings = { bank_name:"[BANK NAME]",account_name:"[ACCOUNT NAME]",account_number:"[ACCOUNT NUMBER]",branch:"[BRANCH]",delivery_fee:500,whatsapp_number:"[WHATSAPP NUMBER]",google_review_url:"[GOOGLE REVIEW URL]",instagram_url:"[INSTAGRAM URL]",facebook_url:"[FACEBOOK URL]",tiktok_url:"[TIKTOK URL]",delivery_information:"[DELIVERY INFORMATION]" };
