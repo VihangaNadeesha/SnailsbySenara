@@ -1,0 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base { html { scroll-behavior:smooth } body { @apply bg-[#fffdfd] text-[#251d21] antialiased; font-family:'DM Sans',sans-serif } ::selection { @apply bg-[#fadce9] } }
+@layer components { .shell { @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12 } .eyebrow { @apply text-[10px] font-semibold uppercase tracking-[.22em] text-[#9b6979] } .display { font-family:'Playfair Display',serif } .button { @apply inline-flex min-h-12 items-center justify-center gap-2 px-6 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-[#ca829e] focus:ring-offset-2 } .button-dark { @apply button bg-[#251d21] text-white hover:bg-[#513743] } .button-blush { @apply button bg-[#fadce9] hover:bg-[#f4c9dc] } .button-outline { @apply button border border-[#251d21] hover:bg-[#251d21] hover:text-white } .field { @apply w-full border border-[#dfd6d9] bg-white px-4 py-3 text-sm outline-none transition focus:border-[#a96d82] focus:ring-1 focus:ring-[#a96d82] } }
