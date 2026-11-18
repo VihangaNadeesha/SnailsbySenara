@@ -1,71 +1,76 @@
-#!/usr/bin/env bash
-# Quick Start Checklist for Snails by Senara
-# Follow these steps to get the payment features working
+﻿# 🚀 QUICK START REMINDER
 
-echo "🎉 Snails by Senara - Quick Start Checklist"
-echo "==========================================="
-echo ""
-echo "✅ What's Already Done:"
-echo "   ✓ Hover images implemented"
-echo "   ✓ Payment method selector created"
-echo "   ✓ Stripe integration added"
-echo "   ✓ Bank transfer option enhanced"
-echo "   ✓ All dependencies installed"
-echo "   ✓ Development server running at http://localhost:3000"
-echo ""
-echo "📋 TODO - Follow These Steps:"
-echo ""
-echo "STEP 1: Get Stripe API Keys"
-echo "   1. Go to: https://stripe.com/register"
-echo "   2. Create a free Stripe account"
-echo "   3. Go to: https://dashboard.stripe.com/test/apikeys"
-echo "   4. Copy your Publishable Key (pk_test_...)"
-echo "   5. Copy your Secret Key (sk_test_...)"
-echo ""
-echo "STEP 2: Add Keys to .env.local"
-echo "   1. Open: .env.local in your editor"
-echo "   2. Add these lines:"
-echo "      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_YOUR_KEY_HERE"
-echo "      STRIPE_SECRET_KEY=sk_test_YOUR_KEY_HERE"
-echo "   3. Save the file"
-echo ""
-echo "STEP 3: Test the Payment Flow"
-echo "   1. Visit: http://localhost:3000"
-echo "   2. Add items to cart"
-echo "   3. Click 'Proceed to Checkout'"
-echo "   4. Choose 'Credit/Debit Card (Stripe)'"
-echo "   5. Use test card: 4242 4242 4242 4242"
-echo "   6. Expiry: 12/25"
-echo "   7. CVC: 123"
-echo "   8. Click 'Pay Rs. XXXX'"
-echo ""
-echo "STEP 4: Verify Hover Images"
-echo "   1. Visit: http://localhost:3000#shop"
-echo "   2. Hover over any nail product"
-echo "   3. Image should smoothly change to hover image"
-echo ""
-echo "STEP 5: Test Bank Transfer (Optional)"
-echo "   1. Go through checkout again"
-echo "   2. This time choose 'Bank Transfer'"
-echo "   3. Upload a payment slip image"
-echo "   4. Submit order"
-echo ""
-echo "🚀 For Production:"
-echo "   1. Complete Stripe business verification"
-echo "   2. Get live API keys (pk_live_... and sk_live_...)"
-echo "   3. Update .env.local with live keys"
-echo "   4. Deploy to production"
-echo ""
-echo "📚 Documentation Files:"
-echo "   - PAYMENT_GUIDE.md        (Full setup guide)"
-echo "   - FEATURES_SUMMARY.md     (Feature overview)"
-echo "   - STRIPE_TEST_CARDS.md    (Test card numbers)"
-echo "   - IMPLEMENTATION_SUMMARY  (What was done)"
-echo ""
-echo "🆘 Need Help?"
-echo "   - Check PAYMENT_GUIDE.md for detailed setup"
-echo "   - See STRIPE_TEST_CARDS.md for test scenarios"
-echo "   - View browser console (F12) for errors"
-echo ""
-echo "==========================================="
-echo "✨ Happy selling! 🐌"
+## Current Status: ✅ APPLICATION RUNNING
+
+Your Snails by Senara app is live at: http://localhost:3000/#shop
+
+---
+
+## 📋 Remaining Tasks (Do These Next):
+
+### STEP 1: Create Database Tables (5 min)
+1. Go to: https://supabase.com/dashboard/project/tcjwvnxshhwsmibdwcoh/sql
+2. Click "New Query"
+3. Copy SQL from: supabase/schema.sql
+4. Click "Run"
+5. Wait for "Executed successfully"
+
+### STEP 2: Create Storage (3 min)
+1. Go to: Storage section
+2. Create: "product-images" (PUBLIC)
+3. Create: "payment-slips" (PRIVATE)
+
+### STEP 3: Upload Images (5 min)
+1. Click: product-images bucket
+2. Click: Upload file
+3. Select all 21 PNG files from public/nails/
+4. Wait for completion
+
+### STEP 4: Insert Products (5 min)
+1. SQL Editor > New Query
+2. Copy SQL from: EXECUTE_NOW.md (Step 1)
+3. Click Run
+
+### STEP 5: Link Images (5 min)
+1. SQL Editor > New Query
+2. Copy SQL from: EXECUTE_NOW.md (Step 2)
+3. Click Run
+
+### STEP 6: Get Service Role Key (2 min)
+1. Settings > API
+2. Copy the "service_role" key
+3. It looks like: sb_private_... or eyJ...
+
+### STEP 7: Update Config (1 min)
+1. Edit .env.local
+2. Find: SUPABASE_SERVICE_ROLE_KEY=
+3. Paste your service role key
+4. Save file
+
+### STEP 8: Restart App (2 min)
+1. Terminal: Ctrl+C
+2. Terminal: npm run dev
+3. Wait for "Ready in Xs"
+
+### STEP 9: Test (5 min)
+1. Browser: http://localhost:3000/#shop
+2. Refresh: Ctrl+Shift+R
+3. Check products are from database
+4. Test add-to-cart
+
+---
+
+## 📁 Key Files
+
+- MANUAL_SETUP_STEPS.md ← FOLLOW THIS FIRST
+- EXECUTE_NOW.md ← SQL commands ready to copy
+- FIND_SERVICE_ROLE_KEY.md ← If you can't find service key
+- NEXT_STEPS_VISUAL_GUIDE.md ← Visual checklist
+
+---
+
+## ⏱️ Time Estimate: 30 minutes total
+
+That's it! You'll be fully live after these steps.
+
+Good luck! 🎉
