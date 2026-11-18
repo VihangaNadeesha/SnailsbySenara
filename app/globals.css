@@ -1,6 +1,267 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@layer base { html { scroll-behavior:smooth } body { @apply bg-[#fffdfd] text-[#251d21] antialiased; font-family:'DM Sans',sans-serif } ::selection { @apply bg-[#fadce9] } }
-@layer components { .shell { @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12 } .eyebrow { @apply text-[10px] font-semibold uppercase tracking-[.22em] text-[#9b6979] } .display { font-family:'Playfair Display',serif } .button { @apply inline-flex min-h-12 items-center justify-center gap-2 px-6 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-[#ca829e] focus:ring-offset-2 } .button-dark { @apply button bg-[#251d21] text-white hover:bg-[#513743] } .button-blush { @apply button bg-[#fadce9] hover:bg-[#f4c9dc] } .button-outline { @apply button border border-[#251d21] hover:bg-[#251d21] hover:text-white } .field { @apply w-full border border-[#dfd6d9] bg-white px-4 py-3 text-sm outline-none transition focus:border-[#a96d82] focus:ring-1 focus:ring-[#a96d82] } }
+
+:root {
+  --color-pearl-white: #f5f6f1;
+  --color-baby-pink: #fadce9;
+  --color-black: #1f1f1f;
+  --color-ash: #8a8785;
+  --color-green: #71806a;
+  --color-pink-deep: #b76f8f;
+  --color-pink-soft: #f6e1ea;
+  --color-rose: #d9a7b6;
+  --color-line: rgba(31, 31, 31, 0.12);
+  --background-soft: #f7efe8;
+  --font-editorial: "Iowan Old Style", "Book Antiqua", Georgia, serif;
+  --font-neue: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: linear-gradient(180deg, #f8f2f3 0%, #f3e7ea 100%);
+    color: var(--color-black);
+    font-family: var(--font-neue);
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--color-baby-pink);
+    color: var(--color-black);
+  }
+
+  button,
+  a,
+  input,
+  textarea,
+  summary {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid var(--color-green);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-[1180px] px-5 sm:px-8 lg:px-12;
+  }
+
+  .eyebrow {
+    color: var(--color-pink-deep);
+    @apply text-[10px] font-medium uppercase tracking-[.24em];
+  }
+
+  .display {
+    font-family: var(--font-editorial);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+
+  .button {
+    min-height: 48px;
+    font-family: var(--font-neue);
+    @apply inline-flex items-center justify-center gap-2 px-6 text-sm font-medium transition duration-300;
+  }
+
+  .button-dark {
+    @apply button bg-[#1f1f1f] text-white hover:bg-[#403d3d];
+  }
+
+  .button-blush {
+    @apply button bg-[#fadce9] text-[#1f1f1f] hover:bg-[#f3c7da];
+  }
+
+  .button-outline {
+    @apply button border border-[#1f1f1f] hover:bg-[#1f1f1f] hover:text-white;
+  }
+
+  .field {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: var(--color-line);
+    font-family: var(--font-neue);
+    @apply w-full border px-4 py-3 text-sm outline-none transition;
+  }
+
+  .field:focus {
+    border-color: var(--color-green);
+    box-shadow: 0 0 0 1px var(--color-green);
+  }
+
+  .brand-shell {
+    @apply mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8;
+  }
+
+  .brand-header {
+    background: rgba(245, 246, 241, 0.96);
+    border-bottom: 1px solid rgba(31, 31, 31, 0.08);
+    backdrop-filter: blur(8px);
+  }
+
+  .brand-header-inner {
+    @apply flex h-[68px] items-center justify-between gap-4;
+  }
+
+  .brand-logo {
+    display: inline-flex;
+    flex-direction: column;
+    text-align: left;
+    line-height: 0.9;
+  }
+
+  .brand-logo-word {
+    font-family: var(--font-editorial);
+    font-size: clamp(1.35rem, 2vw, 2rem);
+    letter-spacing: -0.06em;
+    font-weight: 500;
+  }
+
+  .brand-logo-sub {
+    font-size: 9px;
+    letter-spacing: 0.38em;
+    margin-top: 0.3rem;
+    color: #8a8785;
+    text-transform: uppercase;
+  }
+
+  .brand-hero-logo {
+    font-family: var(--font-editorial);
+    letter-spacing: -0.08em;
+    font-weight: 500;
+    line-height: 0.85;
+    font-size: clamp(4.2rem, 8vw, 9rem);
+  }
+
+  .brand-hero-sub {
+    font-size: clamp(0.9rem, 1.5vw, 2rem);
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: #2b2328;
+  }
+
+  .brand-nav {
+    @apply hidden items-center gap-7 text-[12px] font-medium uppercase tracking-[0.08em] text-[#1f1f1f] md:flex;
+  }
+
+  .brand-nav a {
+    position: relative;
+    transition: color 180ms ease;
+  }
+
+  .brand-nav a:hover {
+    color: var(--color-pink-deep);
+  }
+
+  .brand-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    border: 1px solid rgba(31, 31, 31, 0.12);
+    background: rgba(255, 255, 255, 0.22);
+    transition: all 180ms ease;
+  }
+
+  .brand-icon-button:hover {
+    border-color: rgba(31, 31, 31, 0.35);
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  .brand-hero {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #f9f4f3 0%, #f7ece8 100%);
+    border-bottom: 1px solid rgba(31, 31, 31, 0.08);
+  }
+
+  .brand-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 15% 15%, rgba(250, 220, 233, 0.7), transparent 18%),
+      radial-gradient(circle at 80% 15%, rgba(250, 220, 233, 0.65), transparent 20%),
+      radial-gradient(circle at 60% 70%, rgba(250, 220, 233, 0.38), transparent 28%);
+  }
+
+  .brand-hero-inner {
+    position: relative;
+    z-index: 1;
+    @apply grid items-center gap-6 py-10 sm:py-14 lg:grid-cols-[0.95fr_1.05fr] lg:py-16;
+  }
+
+  .brand-meta-row {
+    @apply mt-12 flex flex-wrap items-center justify-center gap-5 border-t border-black/10 pt-4 text-[10px] uppercase tracking-[0.28em] text-[#5d5c5b] sm:justify-between;
+  }
+
+  .brand-hero-visual {
+    position: relative;
+    min-height: 430px;
+    border-radius: 28px;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(250, 220, 233, 0.9), rgba(247, 239, 232, 0.95));
+    box-shadow: 0 18px 34px rgba(97, 75, 83, 0.12);
+  }
+
+  .brand-badge {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(31, 31, 31, 0.08);
+    backdrop-filter: blur(4px);
+    @apply px-4 py-3 text-[11px] leading-5 text-[#1f1f1f];
+  }
+
+  .brand-section {
+    @apply py-16 sm:py-20;
+  }
+
+  .brand-card {
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(31, 31, 31, 0.08);
+  }
+
+  .brand-review-card {
+    @apply rounded-[28px] border border-[#e9dfe4] bg-white/60 p-6 text-left shadow-[0_12px_30px_rgba(119,95,105,0.05)];
+  }
+
+  .product-card {
+    @apply overflow-hidden rounded-[24px] border border-[#eadfe4] bg-white/70 shadow-[0_14px_36px_rgba(164,120,133,0.08)];
+  }
+
+  .product-card-image {
+    position: relative;
+    aspect-ratio: 0.92;
+    overflow: hidden;
+    background: #f4e2eb;
+  }
+
+  .product-size-button {
+    @apply grid size-8 place-items-center border text-[10px] transition;
+  }
+
+  .faq-item {
+    border-top: 1px solid rgba(31, 31, 31, 0.12);
+  }
+
+  .faq-item summary {
+    @apply flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-sm font-medium text-[#1f1f1f];
+  }
+
+  .faq-item p {
+    @apply pb-5 pr-6 text-sm leading-6 text-[#6d6462];
+  }
+}
