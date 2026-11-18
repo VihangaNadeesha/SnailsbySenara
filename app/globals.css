@@ -1,6 +1,97 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@layer base { html { scroll-behavior:smooth } body { @apply bg-[#fffdfd] text-[#251d21] antialiased; font-family:'DM Sans',sans-serif } ::selection { @apply bg-[#fadce9] } }
-@layer components { .shell { @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12 } .eyebrow { @apply text-[10px] font-semibold uppercase tracking-[.22em] text-[#9b6979] } .display { font-family:'Playfair Display',serif } .button { @apply inline-flex min-h-12 items-center justify-center gap-2 px-6 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-[#ca829e] focus:ring-offset-2 } .button-dark { @apply button bg-[#251d21] text-white hover:bg-[#513743] } .button-blush { @apply button bg-[#fadce9] hover:bg-[#f4c9dc] } .button-outline { @apply button border border-[#251d21] hover:bg-[#251d21] hover:text-white } .field { @apply w-full border border-[#dfd6d9] bg-white px-4 py-3 text-sm outline-none transition focus:border-[#a96d82] focus:ring-1 focus:ring-[#a96d82] } }
+
+:root {
+  --color-pearl-white: #f5f6f1;
+  --color-baby-pink: #fadce9;
+  --color-black: #1f1f1f;
+  --color-ash: #8a8785;
+  --color-green: #71806a;
+  --color-pink-deep: #9a657b;
+  --color-line: rgba(31, 31, 31, 0.12);
+  --font-editorial: "PP Editorial New", "Iowan Old Style", "Baskerville", Georgia, serif;
+  --font-neue: "PP Neue Montreal", "Helvetica Neue", Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-pearl-white);
+    color: var(--color-black);
+    font-family: var(--font-neue);
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--color-baby-pink);
+    color: var(--color-black);
+  }
+
+  button,
+  a,
+  input,
+  textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid var(--color-green);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12;
+  }
+
+  .eyebrow {
+    color: var(--color-pink-deep);
+    @apply text-[10px] font-medium uppercase tracking-[.24em];
+  }
+
+  .display {
+    font-family: var(--font-editorial);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+  }
+
+  .button {
+    min-height: 48px;
+    font-family: var(--font-neue);
+    @apply inline-flex items-center justify-center gap-2 px-6 text-sm font-medium transition duration-300;
+  }
+
+  .button-dark {
+    @apply button bg-[#1f1f1f] text-white hover:bg-[#45413f];
+  }
+
+  .button-blush {
+    @apply button bg-[#fadce9] text-[#1f1f1f] hover:bg-[#f3c7da];
+  }
+
+  .button-outline {
+    @apply button border border-[#1f1f1f] hover:bg-[#1f1f1f] hover:text-white;
+  }
+
+  .field {
+    background: #fff;
+    border-color: var(--color-line);
+    font-family: var(--font-neue);
+    @apply w-full border px-4 py-3 text-sm outline-none transition;
+  }
+
+  .field:focus {
+    border-color: var(--color-green);
+    box-shadow: 0 0 0 1px var(--color-green);
+  }
+}
