@@ -277,7 +277,7 @@ export function Storefront({ products, settings }: { products: Product[]; settin
             <span className="hidden text-[10px] uppercase tracking-[0.24em] text-[#8b717b] sm:block">{products.length} designs</span>
           </div>
 
-          <div className="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-x-6 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} add={add} />
             ))}
