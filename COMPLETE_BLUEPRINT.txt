@@ -1,0 +1,420 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║          🎉 SNAILS BY SENARA - COMPLETE SETUP BLUEPRINT 🎉               ║
+║                                                                            ║
+║              Everything is ready. You have all the tools.                 ║
+║              Just follow the steps and you'll have a                      ║
+║              production-ready e-commerce platform in 20 minutes!          ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+
+📚 YOUR COMPLETE DOCUMENTATION LIBRARY
+════════════════════════════════════════════════════════════════════════════
+
+The files are organized by use case:
+
+GETTING STARTED
+├─ START_HERE.txt ..................... 👈 Read this first (5 min)
+├─ INDEX.md ........................... Complete file index & guide
+└─ QUICK_REFERENCE.md ................. 1-page quick answers
+
+MAIN SETUP GUIDE
+└─ MANUAL_SETUP_STEPS.md .............. 👈 Follow this for setup (20 min)
+   ├─ Step 1: Create Database Tables
+   ├─ Step 2: Create Storage Buckets
+   ├─ Step 3: Upload 21 Nail Images
+   ├─ Step 4: Insert 21 Products
+   ├─ Step 5: Link Images to Products
+   ├─ Step 6: Get Your API Keys
+   ├─ Step 7: Update .env.local
+   ├─ Step 8: Restart Your App
+   └─ Step 9: Test Everything
+
+REFERENCE & TRACKING
+├─ TODO_SUPABASE.md ................... Checklist format tracker
+├─ NEXT_STEPS.md ...................... Action items
+└─ SETUP_COMPLETE.md .................. Setup status overview
+
+DETAILED HELP
+├─ SUPABASE_SETUP.md .................. Full guide with troubleshooting
+├─ README_SUPABASE.md ................. Project overview & features
+├─ SETUP_VISUAL_GUIDE.txt ............. ASCII diagrams & flowcharts
+└─ SUPABASE_QUICKSTART.txt ............ Quick reference guide
+
+CODE REFERENCE
+└─ supabase/schema.sql ................ Database creation SQL
+
+
+🗂️  PROJECT FILES PREPARED
+════════════════════════════════════════════════════════════════════════════
+
+CODE CONFIGURATION:
+✓ lib/demo.ts
+  └─ 21 nail products defined (Classic French through Sunset Ombre)
+  └─ Each with name, price (Rs. 2290-2890), sizes, inventory, description
+
+✓ components/storefront.tsx
+  └─ Grid layout: 2 columns (mobile) → 3 columns (tablet) → 4 columns (desktop)
+  └─ Hover effects for product images
+  └─ Shopping cart integration ready
+
+✓ .env.local
+  └─ NEXT_PUBLIC_SUPABASE_URL = https://tcjwvnxshhwsmibdwcoh.supabase.co
+  └─ Ready for anon key and service role key
+
+ASSETS:
+✓ /public/nails/
+  └─ nail-01.png through nail-21.png (21 unique images ready to upload)
+
+DATABASE:
+✓ supabase/schema.sql
+  └─ Complete database schema with 6 tables
+  └─ Ready to copy-paste into Supabase SQL Editor
+
+
+🎯 YOUR SUPABASE PROJECT
+════════════════════════════════════════════════════════════════════════════
+
+NAME:   VihangaNadeesha's Project
+URL:    https://tcjwvnxshhwsmibdwcoh.supabase.co
+STATUS: ✅ Healthy & Ready
+
+
+⏱️  THE SETUP TIMELINE
+════════════════════════════════════════════════════════════════════════════
+
+Time      Task
+─────────────────────────────────────────────────────────────────────────
+  2 min → Step 1: Create database tables (copy-paste SQL)
+  1 min → Step 2: Create 2 storage buckets (click buttons)
+  5 min → Step 3: Upload 21 PNG images (drag & drop)
+  2 min → Step 4: Insert 21 products (copy-paste SQL)
+  2 min → Step 5: Link images to products (copy-paste SQL)
+  1 min → Step 6: Get API keys (copy from settings)
+  2 min → Step 7: Update .env.local (paste keys)
+  2 min → Step 8: Restart app (npm run dev)
+  2 min → Step 9: Test website (open http://localhost:3000/#shop)
+         ─────────────────────────────────────────────────────────
+ 20 min   TOTAL SETUP TIME
+
+
+🚀 QUICK START PATH
+════════════════════════════════════════════════════════════════════════════
+
+RIGHT NOW (Do this immediately):
+  1. Open: START_HERE.txt
+  2. Read the overview (takes 5 minutes)
+
+NEXT (When ready):
+  3. Open: MANUAL_SETUP_STEPS.md
+  4. Keep it open in your editor
+  5. Open: Supabase dashboard in browser
+
+THEN (Follow step-by-step):
+  6. Execute all 9 steps from MANUAL_SETUP_STEPS.md in order
+  7. Copy SQL code when needed
+  8. Upload images when needed
+  9. Update .env.local when needed
+ 10. Restart app when needed
+
+FINALLY (Verify it works):
+ 11. Test: http://localhost:3000/#shop
+ 12. See all 21 products from database
+
+
+✨ WHAT EACH STEP DOES
+════════════════════════════════════════════════════════════════════════════
+
+Step 1: CREATE DATABASE TABLES
+├─ What: Run database schema SQL
+├─ Where: Supabase SQL Editor
+├─ Why: Create tables to store products, orders, payments
+├─ Time: 2 minutes
+└─ You'll have: Empty but ready database structure
+
+Step 2: CREATE STORAGE BUCKETS
+├─ What: Create 2 file storage areas
+├─ Where: Supabase Storage section
+├─ Why: Store product images and payment proofs in cloud
+├─ Time: 1 minute
+└─ You'll have: Cloud storage ready for files
+
+Step 3: UPLOAD 21 NAIL IMAGES
+├─ What: Upload all PNG files from /public/nails/
+├─ Where: Supabase Storage → product-images bucket
+├─ Why: Store product images in cloud
+├─ Time: 5 minutes
+└─ You'll have: 21 images accessible from cloud
+
+Step 4: INSERT 21 PRODUCTS
+├─ What: Run SQL to add all 21 products to database
+├─ Where: Supabase SQL Editor
+├─ Why: Populate database with product data
+├─ Time: 2 minutes
+└─ You'll have: 21 products in database (without images yet)
+
+Step 5: LINK IMAGES TO PRODUCTS
+├─ What: Run SQL to connect images to products
+├─ Where: Supabase SQL Editor
+├─ Why: Associate product images with product records
+├─ Time: 2 minutes
+└─ You'll have: Complete products with image URLs
+
+Step 6: GET YOUR API KEYS
+├─ What: Copy credentials from Supabase
+├─ Where: Supabase Settings → API
+├─ Why: Enable app to connect to database
+├─ Time: 1 minute
+└─ You'll have: 2 API keys ready to paste
+
+Step 7: UPDATE .env.local
+├─ What: Add API keys to environment file
+├─ Where: Your .env.local file (VS Code)
+├─ Why: Tell app how to connect to Supabase
+├─ Time: 2 minutes
+└─ You'll have: Credentials configured locally
+
+Step 8: RESTART YOUR APP
+├─ What: Stop and restart dev server
+├─ Where: Terminal (npm run dev)
+├─ Why: Reload app with new configuration
+├─ Time: 2 minutes
+└─ You'll have: App running with database connection
+
+Step 9: TEST EVERYTHING
+├─ What: Open website and verify
+├─ Where: http://localhost:3000/#shop
+├─ Why: Confirm everything works
+├─ Time: 2 minutes
+└─ You'll have: Production-ready e-commerce platform
+
+
+🎁 BONUS FEATURES INCLUDED
+════════════════════════════════════════════════════════════════════════════
+
+After setup, you automatically get:
+
+✓ Database for storing products
+✓ Database for storing orders
+✓ Database for storing customers
+✓ Database for storing payment records
+✓ Cloud storage for product images
+✓ Cloud storage for payment proofs
+✓ Automatic order tracking
+✓ Payment verification system
+✓ Inventory management
+✓ Customer data storage
+✓ Order history
+✓ Revenue tracking capability
+✓ Foundation for admin dashboard
+
+
+🔒 SECURITY FEATURES
+════════════════════════════════════════════════════════════════════════════
+
+✓ Row-level security (RLS) policies
+✓ Public read access for products (customers browse)
+✓ Authenticated write access for orders (only your app)
+✓ Private storage for payment proofs
+✓ Service role key for backend operations
+✓ No hardcoded credentials in code
+✓ Environment variables for secrets
+
+
+📊 DATABASE STRUCTURE
+════════════════════════════════════════════════════════════════════════════
+
+You'll have 6 tables:
+
+PRODUCTS TABLE
+├─ id: Unique product ID
+├─ name: "Classic French", "Rosé Glaze", etc.
+├─ description: Details about the product
+├─ price: Rs. 2290, 2390, etc. (in paise)
+├─ available_sizes: ["XS", "S", "M", "L"]
+├─ inventory: Number in stock
+└─ display_order: Sort order on website
+
+PRODUCT_IMAGES TABLE
+├─ id: Unique image ID
+├─ product_id: Link to products table
+├─ image_url: Path to image in cloud storage
+└─ display_order: Which image to show first
+
+ORDERS TABLE
+├─ id: Unique order ID
+├─ customer_name: "John Doe"
+├─ customer_email: "john@example.com"
+├─ customer_phone: "+91..."
+├─ delivery_address: Full address
+├─ order_status: "pending" → "paid" → "shipped"
+└─ created_at: When order was placed
+
+ORDER_ITEMS TABLE
+├─ id: Unique item ID
+├─ order_id: Link to orders table
+├─ product_name: "Classic French"
+├─ product_size: "M"
+├─ quantity: 2
+└─ unit_price: Rs. 2290
+
+PAYMENT_SLIPS TABLE
+├─ id: Unique payment ID
+├─ order_id: Link to orders table
+├─ file_path: Where slip stored in cloud
+└─ verified_at: When admin verified
+
+BUSINESS_SETTINGS TABLE
+├─ bank_name: "ABC Bank"
+├─ account_holder: "Senara"
+├─ account_number: "XXXXX..."
+├─ delivery_fee: Rs. 100
+├─ whatsapp_number: "+91..."
+└─ instagram_url: "https://instagram.com/..."
+
+
+🎓 WHAT YOU'LL LEARN
+════════════════════════════════════════════════════════════════════════════
+
+This setup teaches you:
+
+✓ Cloud database concepts (Supabase/PostgreSQL)
+✓ SQL for data management
+✓ Cloud storage configuration
+✓ Environment variables & configuration management
+✓ Web app to database connection
+✓ Row-level security (RLS) policies
+✓ API key management
+✓ Production deployment patterns
+✓ Scalable architecture design
+
+
+⚠️  IMPORTANT REMINDERS
+════════════════════════════════════════════════════════════════════════════
+
+🔴 DO THESE:
+  ✓ Follow steps IN ORDER (order matters!)
+  ✓ Read MANUAL_SETUP_STEPS.md carefully
+  ✓ Copy FULL API keys (not partial)
+  ✓ Save .env.local after updating
+  ✓ Restart app after .env.local changes
+  ✓ Keep .env.local private (don't commit to git)
+
+🔴 DON'T DO THESE:
+  ✗ Skip any steps
+  ✗ Change step order
+  ✗ Copy partial API keys
+  ✗ Share service_role_key
+  ✗ Commit .env.local to git
+  ✗ Upload .env.local to GitHub
+  ✗ Forget to restart app
+
+
+🆘 IF YOU GET STUCK
+════════════════════════════════════════════════════════════════════════════
+
+Which step?        Check File:          Section:
+─────────────────────────────────────────────────────────────────────────
+Step 1 (SQL)       SUPABASE_SETUP.md     Database Creation
+Step 2 (Buckets)   SUPABASE_SETUP.md     Storage Setup
+Step 3 (Images)    SUPABASE_SETUP.md     Image Upload Issues
+Step 4-5 (Insert)  SUPABASE_SETUP.md     Product Insertion
+Step 6 (API Keys)  SUPABASE_SETUP.md     Getting API Keys
+Step 7 (.env)      SUPABASE_SETUP.md     Environment Setup
+Step 8 (Restart)   SUPABASE_SETUP.md     App Startup Issues
+Step 9 (Test)      SUPABASE_SETUP.md     Connection Issues
+
+
+🌟 SUCCESS INDICATORS
+════════════════════════════════════════════════════════════════════════════
+
+After Step 1: Database tables exist in Supabase ✓
+After Step 2: Storage buckets exist in Supabase ✓
+After Step 3: 21 images visible in storage ✓
+After Step 4: Products table has 21 rows ✓
+After Step 5: Product images linked correctly ✓
+After Step 6: You have API keys copied ✓
+After Step 7: .env.local has 3 variables filled ✓
+After Step 8: App restarts with no errors ✓
+After Step 9: Website shows all 21 products from database ✓
+
+
+🎯 AFTER SETUP: WHAT'S NEXT
+════════════════════════════════════════════════════════════════════════════
+
+Week 1: Test with real customers
+  → Can they browse 21 products?
+  → Can they add to cart?
+  → Can they checkout?
+  → Can they pay?
+
+Week 2: Monitor operations
+  → Check orders in Supabase dashboard
+  → Verify payment proofs
+  → Track inventory
+
+Week 3: Optimize & improve
+  → Add admin dashboard (optional)
+  → Email notifications (optional)
+  → Stripe integration (optional)
+  → Customer accounts (optional)
+
+
+📱 TEST URLS
+════════════════════════════════════════════════════════════════════════════
+
+After setup works:
+
+SHOP:  http://localhost:3000/#shop
+└─ Browse all 21 products
+
+HOME:  http://localhost:3000/
+└─ Homepage with hero section
+
+ABOUT: http://localhost:3000/#about
+└─ About Snails by Senara
+
+
+✅ FINAL CHECKLIST
+════════════════════════════════════════════════════════════════════════════
+
+Before you start:
+  ☐ Have browser open with Supabase dashboard
+  ☐ Have editor open with MANUAL_SETUP_STEPS.md
+  ☐ Have terminal ready for npm commands
+  ☐ Have /public/nails/ images in view
+
+During setup:
+  ☐ Follow each step exactly
+  ☐ Don't skip steps
+  ☐ Copy full API keys
+  ☐ Save .env.local
+
+After setup:
+  ☐ All 9 steps complete
+  ☐ Website shows 21 products
+  ☐ All products load from database
+  ☐ Cart functionality works
+
+
+🎉 YOU'RE READY!
+════════════════════════════════════════════════════════════════════════════
+
+Everything is prepared.
+All files are created.
+All documentation is written.
+All assets are ready.
+
+➤ START HERE: START_HERE.txt
+
+➤ THEN FOLLOW: MANUAL_SETUP_STEPS.md
+
+➤ TOTAL TIME: ~20 minutes to production-ready!
+
+You've got this! 💪
+
+
+════════════════════════════════════════════════════════════════════════════
+Version: 1.0 | Status: ✅ Complete | Project: Snails by Senara
+════════════════════════════════════════════════════════════════════════════

@@ -1,11 +1,14 @@
+import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabase/server";
-import { demoProducts } from "@/lib/demo";
+import { demoProducts, placeholderSettings } from "@/lib/demo";
 
 export const runtime = "nodejs";
 
 const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ORDER_REFERENCE_PLACEHOLDER = "__ORDER_REFERENCE__";
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export async function POST(request: Request) {
   try {
@@ -17,6 +20,21 @@ export async function POST(request: Request) {
     const notes = String(form.get("notes") || "").trim();
     const file = form.get("slip");
     const itemsRaw = String(form.get("items") || "[]");
+    const idempotencyKey = String(form.get("idempotencyKey") || "");
+    const resumeToken = String(form.get("resumeToken") || "");
+    const messageTemplate = String(form.get("messageTemplate") || "");
+
+    if (
+      !UUID_PATTERN.test(idempotencyKey) ||
+      !/^[0-9a-f]{64}$/i.test(resumeToken) ||
+      messageTemplate.length < 20 ||
+      messageTemplate.length > 8000 ||
+      !messageTemplate.includes(ORDER_REFERENCE_PLACEHOLDER)
+    ) {
+      return NextResponse.json({ error: "Invalid order confirmation details." }, { status: 400 });
+    }
+
+    const tokenHash = createHash("sha256").update(resumeToken).digest("hex");
 
     // Validate delivery details
     if (name.length < 2 || phone.length < 5 || address.length < 5) {
@@ -71,11 +89,39 @@ export async function POST(request: Request) {
     // Get Supabase client
     const sb = supabaseServer();
     if (!sb) {
-      const products = parsed.map((i) => demoProducts.find((p) => p.id === i.product_id)).filter(Boolean);
-      if (products.length !== parsed.length) throw new Error("Demo product not found");
+      return NextResponse.json(
+        { error: "Order submission requires the Supabase server configuration." },
+        { status: 503 }
+      );
+    }
+
+    const { data: existingOrder, error: existingOrderError } = await sb
+      .from("orders")
+      .select("order_number,status,whatsapp_confirmation_token_hash")
+      .eq("idempotency_key", idempotencyKey)
+      .maybeSingle();
+
+    if (existingOrderError) {
+      console.error("Could not check order idempotency:", existingOrderError);
+      if (existingOrderError.code === "42703" || existingOrderError.code === "PGRST204") {
+        return NextResponse.json(
+          { error: "Supabase is missing the WhatsApp order confirmation schema. Apply the latest order confirmation migration, then retry." },
+          { status: 503 }
+        );
+      }
+      throw new Error("Could not verify the order submission.");
+    }
+
+    if (existingOrder) {
+      if (existingOrder.whatsapp_confirmation_token_hash !== tokenHash) {
+        return NextResponse.json({ error: "This checkout attempt is no longer valid." }, { status: 409 });
+      }
+      if (!["PENDING_WHATSAPP", "SUBMITTED"].includes(existingOrder.status)) {
+        return NextResponse.json({ error: "Your order is still being processed. Please retry shortly." }, { status: 409 });
+      }
       return NextResponse.json({
-        orderNumber: String(Math.floor(1000 + Math.random() * 8999)),
-        demo: true,
+        orderNumber: String(existingOrder.order_number),
+        resumeToken,
       });
     }
 
@@ -114,21 +160,38 @@ export async function POST(request: Request) {
       return sum + p.price * i.quantity;
     }, 0);
     
-    // For now, assume no delivery fee since we can't fetch settings
-    const total = subtotal;
+    const { data: businessSettings, error: settingsError } = await sb
+      .from("business_settings")
+      .select("delivery_fee")
+      .limit(1)
+      .maybeSingle();
+    if (settingsError && !["PGRST205", "42P01"].includes(settingsError.code)) {
+      console.error("Could not load delivery fee:", settingsError);
+      return NextResponse.json(
+        { error: "We couldn't calculate your order total. Please try again." },
+        { status: 503 }
+      );
+    }
+    if (settingsError || !businessSettings) {
+      console.warn("Business settings unavailable; using the storefront's default delivery fee.");
+    }
+    const total = subtotal + Number(businessSettings?.delivery_fee ?? placeholderSettings.delivery_fee);
 
     // Create order using only columns that exist in the actual database
     const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     
-    console.log("Creating order with columns: order_number, total_amount, status, payment_method, payment_status");
+    console.log("Creating WhatsApp-pending order");
     const { data: order, error: orderError } = await sb
       .from("orders")
       .insert({
         order_number: orderNumber,
         total_amount: total,
-        status: "pending",
+        status: "CREATING",
         payment_method: "bank_transfer",
         payment_status: "unpaid",
+        idempotency_key: idempotencyKey,
+        whatsapp_confirmation_token_hash: tokenHash,
+        whatsapp_message: messageTemplate.replaceAll(ORDER_REFERENCE_PLACEHOLDER, orderNumber),
       })
       .select("id,order_number")
       .single();
@@ -173,8 +236,27 @@ export async function POST(request: Request) {
 
     if (uploadError) {
       console.error("File upload failed:", uploadError);
-      // Don't fail the entire request if slip upload fails - the order is already created
-      console.warn("Continuing despite slip upload failure - order already created");
+      const { error: cleanupError } = await sb.from("orders").delete().eq("id", order.id);
+      if (cleanupError) {
+        console.error("Could not clean up order after slip upload failure:", cleanupError);
+      }
+      return NextResponse.json(
+        { error: "We couldn't save your payment slip. Please retry your order." },
+        { status: 503 }
+      );
+    }
+
+    const { error: readyError } = await sb
+      .from("orders")
+      .update({ payment_slip_path: slipPath, status: "PENDING_WHATSAPP" })
+      .eq("id", order.id);
+    if (readyError) {
+      console.error("Could not finalize order after slip upload:", readyError);
+      const { error: fileCleanupError } = await sb.storage.from("payment_slips").remove([slipPath]);
+      if (fileCleanupError) console.error("Could not clean up uploaded payment slip:", fileCleanupError);
+      const { error: orderCleanupError } = await sb.from("orders").delete().eq("id", order.id);
+      if (orderCleanupError) console.error("Could not clean up incomplete order:", orderCleanupError);
+      throw new Error("Could not finalize the order.");
     }
 
     // Try to create a bank_payments record for tracking payment details
@@ -195,7 +277,7 @@ export async function POST(request: Request) {
     }
 
     console.log("Order submission complete:", { orderId: order.id, orderNumber: order.order_number, total });
-    return NextResponse.json({ orderNumber: order.order_number });
+    return NextResponse.json({ orderNumber: order.order_number, resumeToken });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("Unexpected error in POST /api/orders:", err);
