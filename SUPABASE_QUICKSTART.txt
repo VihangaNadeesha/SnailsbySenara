@@ -1,0 +1,101 @@
+📋 QUICK SUPABASE SETUP CHECKLIST
+==================================
+
+Follow these steps in order:
+
+□ STEP 1: Create Supabase Account
+  • Go to https://supabase.com
+  • Sign up → Create new project
+  • Project name: "snails-by-senara"
+  • Save database password!
+  • ⏱️ Wait 2-3 minutes for initialization
+
+□ STEP 2: Get Your Credentials
+  • Settings → API
+  • Copy Project URL
+  • Copy anon (public) key
+  • Copy service_role key
+
+□ STEP 3: Update .env.local
+  • Edit .env.local in project root
+  • Replace placeholder values with your credentials:
+    NEXT_PUBLIC_SUPABASE_URL=YOUR_URL
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
+    SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
+  • Save file
+
+□ STEP 4: Create Database Tables
+  • SQL Editor → New Query
+  • Copy content from: supabase/schema.sql
+  • Paste into SQL editor
+  • Click RUN
+  • ✅ Wait for success
+
+□ STEP 5: Create Storage Buckets
+  • Storage → Create new bucket
+  • Bucket 1: "product-images" (PUBLIC)
+  • Bucket 2: "payment-slips" (PRIVATE)
+
+□ STEP 6: Upload Images
+  • Storage → product-images
+  • Upload all 21 PNG files from /public/nails/
+  • Verify all files appear in storage
+
+□ STEP 7: Insert Product Data
+  • SQL Editor → New Query
+  • Run the INSERT statement for products
+  • ✅ You should see 21 products created
+
+□ STEP 8: Verify Setup
+  • Tables → products (should show 21 rows)
+  • Tables → product_images (should show 21 rows)
+  • Tables → business_settings (should show 1 row)
+
+□ STEP 9: Restart Dev Server
+  • Terminal: Ctrl+C (stop current server)
+  • Terminal: npm run dev
+  • ⏱️ Wait for "ready on http://localhost:3000"
+
+□ STEP 10: Test
+  • Open: http://localhost:3000/#shop
+  • ✅ All 21 products should load from database
+  • ✅ Images should display correctly
+  • ✅ Prices and descriptions visible
+
+═════════════════════════════════════════════════════════════════
+
+IMPORTANT CREDENTIALS TO SAVE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Project URL:
+https://xxxxxxxxxxxx.supabase.co
+
+Anon Key:
+[paste here]
+
+Service Role Key:
+[paste here]
+
+Database Password:
+[paste here]
+
+═════════════════════════════════════════════════════════════════
+
+HAVING ISSUES? 🆘
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Connection errors?
+  → Check .env.local has correct URL and keys
+  → Restart: npm run dev
+
+Images not loading?
+  → Verify bucket is public
+  → Check storage_path matches uploaded files
+
+Products not appearing?
+  → Check SQL query ran successfully
+  → Verify products table has 21 rows
+
+═════════════════════════════════════════════════════════════════
+
+Need help? Run through SUPABASE_SETUP.md for detailed instructions!

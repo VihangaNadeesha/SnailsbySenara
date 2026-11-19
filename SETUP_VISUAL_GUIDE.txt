@@ -1,0 +1,278 @@
+╔════════════════════════════════════════════════════════════════╗
+║                  SUPABASE SETUP - VISUAL GUIDE                 ║
+╚════════════════════════════════════════════════════════════════╝
+
+
+PROJECT OVERVIEW
+════════════════════════════════════════════════════════════════
+
+Your Supabase Project:
+┌─────────────────────────────────────────────────────────────┐
+│ Project: VihangaNadeesha's Project                          │
+│ URL: https://tcjwvnxshhwsmibdwcoh.supabase.co              │
+│ Status: ✅ Healthy                                           │
+│ Region: Configured                                           │
+└─────────────────────────────────────────────────────────────┘
+
+
+WHAT YOU'RE BUILDING
+════════════════════════════════════════════════════════════════
+
+                    ┌──────────────────┐
+                    │  Snails by       │
+                    │  Senara Website  │
+                    └────────┬─────────┘
+                             │
+         ┌───────────────────┼───────────────────┐
+         │                   │                   │
+         ▼                   ▼                   ▼
+    ┌─────────┐         ┌──────────┐       ┌──────────────┐
+    │ Products│         │  Orders  │       │ Payments     │
+    │ (21)    │         │  Storage │       │ Verification │
+    └─────────┘         └──────────┘       └──────────────┘
+         │                   │                   │
+         └───────────────────┼───────────────────┘
+                             │
+                    ┌────────▼─────────┐
+                    │   Supabase       │
+                    │   Database +     │
+                    │   Cloud Storage  │
+                    └──────────────────┘
+
+
+SETUP SEQUENCE
+════════════════════════════════════════════════════════════════
+
+Step 1: Create Tables
+─────────────────────
+   SQL Editor → Run schema.sql
+   ✅ Creates: products, orders, payments tables
+
+
+Step 2: Create Storage
+──────────────────────
+   Storage → Create 2 buckets
+   ✅ product-images (PUBLIC)
+   ✅ payment-slips (PRIVATE)
+
+
+Step 3: Upload Images
+─────────────────────
+   Upload 21 PNGs → product-images bucket
+   ✅ All images in cloud
+
+
+Step 4: Insert Products
+──────────────────────
+   SQL Editor → Insert 21 products
+   ✅ Database populated with product data
+
+
+Step 5: Link Images
+───────────────────
+   SQL Editor → Insert product_images
+   ✅ Each product linked to its image
+
+
+Step 6: Get API Keys
+────────────────────
+   Settings → API → Copy keys
+   ✅ Have credentials ready
+
+
+Step 7: Update .env.local
+─────────────────────────
+   Add API keys to environment
+   ✅ App configured to use Supabase
+
+
+Step 8: Restart App
+───────────────────
+   npm run dev
+   ✅ App loads with live database
+
+
+Step 9: Verify
+──────────────
+   http://localhost:3000/#shop
+   ✅ 21 products loaded from database!
+
+
+DATA FLOW
+════════════════════════════════════════════════════════════════
+
+Customer Visits:
+│
+├─→ App requests products from Supabase
+│   └─→ Database returns 21 products
+│
+├─→ App requests images from Storage
+│   └─→ Storage returns public URLs
+│
+├─→ Customer adds items to cart
+│   └─→ Stored in browser (session)
+│
+├─→ Customer proceeds to checkout
+│   └─→ Order saved to database
+│
+└─→ Customer uploads payment slip
+    └─→ Payment proof saved to storage
+        └─→ Admin verifies in Supabase
+
+
+DATABASE STRUCTURE
+════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│                      PRODUCTS                               │
+├─────────────────────────────────────────────────────────────┤
+│ • Classic French                                             │
+│ • Rosé Glaze                                                 │
+│ • Cherry Blossom                                             │
+│ ... (21 total)                                               │
+└────────────┬────────────────────────────────────────────────┘
+             │ links to
+             ▼
+┌─────────────────────────────────────────────────────────────┐
+│                   PRODUCT IMAGES                            │
+├─────────────────────────────────────────────────────────────┤
+│ • nail-01.png (Classic French)                              │
+│ • nail-02.png (Rosé Glaze)                                   │
+│ • nail-03.png (Cherry Blossom)                              │
+│ ... (21 total)                                               │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│                      ORDERS                                 │
+├─────────────────────────────────────────────────────────────┤
+│ • Order ID, Customer Info                                   │
+│ • Status: pending → paid → shipped → delivered              │
+│ • Subtotal, Delivery Fee, Total                             │
+└────────────┬────────────────────────────────────────────────┘
+             │ contains
+             ▼
+┌─────────────────────────────────────────────────────────────┐
+│                   ORDER ITEMS                               │
+├─────────────────────────────────────────────────────────────┤
+│ • Product ID, Size (XS/S/M/L)                              │
+│ • Quantity, Unit Price, Subtotal                            │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│                 PAYMENT SLIPS                               │
+├─────────────────────────────────────────────────────────────┤
+│ • Order ID, File Name                                       │
+│ • Status: pending → verified / rejected                     │
+│ • Upload Time, Verification Time                            │
+└─────────────────────────────────────────────────────────────┘
+
+
+FILES LOCATION
+════════════════════════════════════════════════════════════════
+
+Your Project Root:
+│
+├── supabase/
+│   └── schema.sql ..................... Database schema (SQL)
+│
+├── public/nails/
+│   ├── nail-01.png
+│   ├── nail-02.png
+│   └── ... (21 total PNG files)
+│
+├── .env.local ......................... Environment variables
+│
+├── MANUAL_SETUP_STEPS.md ............. Detailed walkthrough
+├── TODO_SUPABASE.md .................. Checklist tracker
+├── NEXT_STEPS.md ..................... Quick start
+└── SUPABASE_SETUP.md ................. Complete guide
+
+
+NEXT ACTION
+════════════════════════════════════════════════════════════════
+
+➤ Open: MANUAL_SETUP_STEPS.md
+➤ Follow Step 1 through Step 9
+➤ Total time: ~20 minutes
+➤ Result: Fully operational e-commerce site! 🎉
+
+
+CREDENTIALS TO SAVE
+════════════════════════════════════════════════════════════════
+
+After Step 6, you'll have:
+
+Project URL:
+  https://tcjwvnxshhwsmibdwcoh.supabase.co
+
+Anon Key:
+  [Copy from Settings → API]
+
+Service Role Key:
+  [Copy from Settings → API]
+
+⚠️ Save these safely! Add to .env.local in Step 7
+
+
+VERIFICATION CHECKLIST
+════════════════════════════════════════════════════════════════
+
+After setup, verify:
+
+Supabase Dashboard:
+  ☐ Tables → products (21 rows)
+  ☐ Tables → product_images (21 rows)
+  ☐ Tables → business_settings (1 row)
+  ☐ Tables → orders (empty, ready)
+  ☐ Tables → payment_slips (empty, ready)
+  ☐ Storage → product-images (21 files)
+
+Your App:
+  ☐ http://localhost:3000/#shop loads
+  ☐ 21 products showing
+  ☐ Images load from cloud
+  ☐ Add to cart works
+  ☐ Checkout starts successfully
+
+
+TROUBLESHOOTING
+════════════════════════════════════════════════════════════════
+
+Issue: Tables not created
+Fix: Check SQL query ran successfully in Supabase
+
+Issue: Images not showing
+Fix: Verify bucket is PUBLIC and images uploaded
+
+Issue: Products not loading
+Fix: Check .env.local has correct keys and restart npm
+
+Issue: "Connection refused"
+Fix: Restart server: npm run dev
+
+
+WHAT'S NEXT (AFTER SETUP)
+════════════════════════════════════════════════════════════════
+
+✓ You'll have:
+  • Database with 21 products
+  • Cloud storage for images
+  • Order management ready
+  • Payment tracking ready
+  • Customer data storage
+
+Consider adding:
+  • Admin dashboard (verify payments)
+  • Email notifications
+  • Order tracking for customers
+  • Inventory alerts
+  • More payment methods
+
+
+═══════════════════════════════════════════════════════════════════
+
+                    🚀 YOU'RE READY TO GO!
+
+   Follow MANUAL_SETUP_STEPS.md now for step-by-step guide
+
+═══════════════════════════════════════════════════════════════════
