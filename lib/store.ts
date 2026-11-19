@@ -2,12 +2,20 @@ import { demoProducts, placeholderSettings } from "@/lib/demo";
 import { supabaseServer } from "@/lib/supabase/server";
 import type { Product, Settings } from "@/types";
 
+const fallbackSettings: Settings = {
+  ...placeholderSettings,
+  bank_name: "Bank Of Ceylon",
+  account_name: "K.T.Senara",
+  account_number: "84766542",
+  branch: "Deniyaya",
+};
+
 export async function getStorefront(): Promise<{ products: Product[]; settings: Settings }> {
   const sb = supabaseServer();
   
   // If no Supabase connection or error, use demo products
   if (!sb) {
-    return { products: demoProducts, settings: placeholderSettings };
+    return { products: demoProducts, settings: fallbackSettings };
   }
 
   try {
@@ -22,7 +30,7 @@ export async function getStorefront(): Promise<{ products: Product[]; settings: 
 
     // If no products from database, use demo products
     if (!products || products.length === 0) {
-      return { products: demoProducts, settings: settings || placeholderSettings };
+      return { products: demoProducts, settings: settings || fallbackSettings };
     }
 
     return {
@@ -33,12 +41,12 @@ export async function getStorefront(): Promise<{ products: Product[]; settings: 
           image: path ? sb.storage.from("product_images").getPublicUrl(path).data.publicUrl : undefined,
         };
       }),
-      settings: settings || placeholderSettings,
+      settings: settings || fallbackSettings,
     };
   } catch (error) {
     // If any error occurs, return demo products
     console.error("Error fetching from Supabase:", error);
-    return { products: demoProducts, settings: placeholderSettings };
+    return { products: demoProducts, settings: fallbackSettings };
   }
 }
 
