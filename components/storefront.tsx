@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import type { CartItem, Product, Settings, Size } from "@/types";
+import { ImageZoom } from "./image-zoom";
 
 const money = (n: number) => `Rs. ${n.toLocaleString("en-LK")}`;
 const wa = (number: string, text = "Hello, I would like to inquire about your services and products.") =>
@@ -502,15 +503,14 @@ function ProductCard({ product, add }: { product: Product; add: (p: Product, s: 
     <>
       <article className="product-card">
         <div className="product-card-image" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
-          <Image
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+          <ImageZoom
             src={
               isHovering && product.hover_image
                 ? product.hover_image
                 : product.image || "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=900&q=85"
             }
             alt={product.name}
+            fill
             className="object-cover transition duration-500 hover:scale-105"
           />
           {sold && <span className="absolute left-3 top-3 bg-white/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em]">Sold out</span>}
@@ -544,20 +544,28 @@ function ProductCard({ product, add }: { product: Product; add: (p: Product, s: 
             Size chart
           </button>
 
-          <div className="mt-5 flex items-center gap-3">
-            <div className="flex min-w-[118px] items-center justify-between border border-[#d8cdd3] bg-[#fffdfd]">
-              <button type="button" className="grid h-11 w-11 place-items-center text-xl text-[#2a2126]" onClick={() => setQuantity((value) => Math.max(1, value - 1))}>
-                −
-              </button>
-              <span className="grid w-8 place-items-center text-xs font-medium text-[#2a2126]">{quantity}</span>
-              <button type="button" className="grid h-11 w-11 place-items-center text-xl text-[#2a2126]" onClick={() => setQuantity((value) => value + 1)}>
-                +
+          <div className="mt-5 flex flex-col gap-3">
+            <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center border border-[#d8cdd3] bg-[#fffdfd]">
+                <button type="button" className="grid h-10 w-10 place-items-center text-lg text-[#2a2126] hover:bg-[#f2e7ea] transition" onClick={() => setQuantity((value) => Math.max(1, value - 1))}>
+                  −
+                </button>
+                <span className="grid w-10 place-items-center text-sm font-semibold text-[#2a2126]">{quantity}</span>
+                <button type="button" className="grid h-10 w-10 place-items-center text-lg text-[#2a2126] hover:bg-[#f2e7ea] transition" onClick={() => setQuantity((value) => value + 1)}>
+                  +
+                </button>
+              </div>
+              
+              <button 
+                type="button" 
+                disabled={sold} 
+                onClick={() => add(product, size, quantity)} 
+                className="flex-1 button-dark px-4 py-2.5 font-medium text-sm transition-all hover:shadow-lg active:scale-95 disabled:cursor-not-allowed disabled:bg-[#b7a7ad] disabled:hover:shadow-none"
+              >
+                <span className="inline-block mr-2">🛒</span>
+                {sold ? "Sold Out" : "Add to Cart"}
               </button>
             </div>
-
-            <button type="button" disabled={sold} onClick={() => add(product, size, quantity)} className="button-dark flex-1 disabled:cursor-not-allowed disabled:bg-[#b7a7ad]">
-              {sold ? "Sold Out" : "Add to Cart"}
-            </button>
           </div>
         </div>
       </article>
@@ -954,9 +962,11 @@ function Checkout({ cart, subtotal, settings, close, complete }: { cart: CartIte
               <div className="mt-5 space-y-4">
                 {cart.map((item) => (
                   <div key={`${item.id}-${item.selectedSize}`} className="flex gap-3 border-b border-[#e2d4d8] pb-3">
-                    <div className="relative h-16 w-16 overflow-hidden bg-[#f2e7ea]">
-                      <Image fill src={item.image || "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=300&q=80"} alt={item.name} className="object-cover" />
-                    </div>
+                    <ImageZoom
+                      src={item.image || "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=300&q=80"}
+                      alt={item.name}
+                      className="relative h-16 w-16 overflow-hidden bg-[#f2e7ea] rounded flex-shrink-0"
+                    />
                     <div className="flex-1 text-sm text-[#3b2d35]">
                       <div className="font-semibold">{item.name}</div>
                       <div className="mt-1">Qty: {item.quantity} · Size: {item.selectedSize}</div>
