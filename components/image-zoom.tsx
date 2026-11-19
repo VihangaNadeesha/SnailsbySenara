@@ -7,6 +7,7 @@ export function ImageZoom({ src, alt, fill = false, className = "" }: { src: str
   const [zoomLevel, setZoomLevel] = useState(1);
 
   const handleWheel = (e: React.WheelEvent) => {
+    if (!isZoomed) return;
     e.preventDefault();
     setZoomLevel((prev) => {
       const newLevel = e.deltaY > 0 ? Math.max(1, prev - 0.2) : Math.min(3, prev + 0.2);
@@ -48,14 +49,33 @@ export function ImageZoom({ src, alt, fill = false, className = "" }: { src: str
     );
   }
 
-  return (
-    <div className={`relative cursor-zoom-in ${className}`} onClick={handleClick} role="button" tabIndex={0}>
-      {fill ? (
+  if (fill) {
+    return (
+      <div 
+        className={`relative cursor-zoom-in group w-full h-full ${className}`} 
+        onClick={handleClick} 
+        role="button" 
+        tabIndex={0}
+        suppressHydrationWarning
+      >
         <Image src={src} alt={alt} fill className="object-cover" />
-      ) : (
-        <img src={src} alt={alt} className="w-full h-auto" />
-      )}
-      <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded opacity-0 hover:opacity-100 transition-opacity">
+        <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          🔍 Click to zoom
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div 
+      className={`relative cursor-zoom-in group overflow-hidden ${className}`} 
+      onClick={handleClick} 
+      role="button" 
+      tabIndex={0}
+      suppressHydrationWarning
+    >
+      <img src={src} alt={alt} className="w-full h-full object-cover" />
+      <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
         🔍 Click to zoom
       </div>
     </div>

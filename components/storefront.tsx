@@ -1,29 +1,26 @@
 "use client";
 import Image from "next/image";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CartItem, Product, Settings, Size } from "@/types";
 import { ImageZoom } from "./image-zoom";
+import { formatOrderMessage } from "@/lib/whatsapp-sharing";
+import { PendingOrderConfirmation } from "./pending-order-confirmation";
+import {
+  ORDER_ATTEMPT_STORAGE_KEY,
+  ORDER_WHATSAPP_OPENED_KEY,
+  PENDING_ORDER_STORAGE_KEY,
+  getOrCreateOrderAttempt,
+  readOrderAccess,
+  saveOrderAccess,
+  type OrderAccess,
+} from "@/lib/order-confirmation";
 
 const money = (n: number) => `Rs. ${n.toLocaleString("en-LK")}`;
+const WHATSAPP_BUSINESS_NUMBER = "+94 75 387 2343";
+
+// Helper to convert phone number to WhatsApp URL
 const wa = (number: string, text = "Hello, I would like to inquire about your services and products.") =>
   number.startsWith("[") ? "#" : `https://wa.me/${number.replace(/\D/g, "")}?text=${encodeURIComponent(text)}`;
-
-async function openWhatsAppOrder(number: string, message: string, file?: File | null) {
-  if (file && typeof navigator !== "undefined" && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-    try {
-      await navigator.share({
-        title: "Snails by Senara Order",
-        text: message,
-        files: [file],
-      });
-      return;
-    } catch {
-      // Fall back to WhatsApp chat if the share sheet is dismissed or unavailable.
-    }
-  }
-
-  window.open(wa(number, message), "_blank", "noopener,noreferrer");
-}
 
 const nav = [
   ["Home", "home"],
@@ -108,10 +105,32 @@ export function Storefront({ products, settings }: { products: Product[]; settin
   const [paymentMethod, setPaymentMethod] = useState<"bank">("bank");
   const [menu, setMenu] = useState(false);
   const [done, setDone] = useState<string | null>(null);
+  const [pendingOrder, setPendingOrder] = useState<OrderAccess | null>(null);
 
   useEffect(() => {
     const saved = sessionStorage.getItem("snails-cart");
     if (saved) setCart(JSON.parse(saved));
+    const savedOrder = localStorage.getItem(PENDING_ORDER_STORAGE_KEY);
+    const access = readOrderAccess(savedOrder);
+    if (access) {
+      setPendingOrder(access);
+    } else if (savedOrder) {
+      localStorage.removeItem(PENDING_ORDER_STORAGE_KEY);
+    }
+  }, []);
+
+  const handleOrderCreated = useCallback((access: OrderAccess) => {
+    setCart([]);
+    setCheckout(false);
+    setPendingOrder(access);
+  }, []);
+
+  const handleOrderConfirmed = useCallback((orderNumber: string) => {
+    localStorage.removeItem(PENDING_ORDER_STORAGE_KEY);
+    localStorage.removeItem(ORDER_ATTEMPT_STORAGE_KEY);
+    localStorage.removeItem(ORDER_WHATSAPP_OPENED_KEY);
+    setPendingOrder(null);
+    setDone(orderNumber);
   }, []);
 
   useEffect(() => {
@@ -217,9 +236,9 @@ export function Storefront({ products, settings }: { products: Product[]; settin
                   priority
                   fill
                   sizes="(max-width: 1024px) 100vw, 52vw"
-                  src="https://images.unsplash.com/photo-1600948836101-f9ffda59d250?auto=format&fit=crop&w=1200&q=80"
-                  alt="Luxury salon styling"
-                  className="object-cover"
+                  src="/salon/salon (1).JPG"
+                  alt="Snails by Senara nail salon"
+                  className="object-cover object-[center_25%]"
                 />
                 <div className="brand-badge">
                   <div className="text-[11px] uppercase tracking-[0.16em] text-[#7a666d]">Snails by Senara</div>
@@ -245,8 +264,8 @@ export function Storefront({ products, settings }: { products: Product[]; settin
               <Image
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1200&q=80"
-                alt="Senara portrait"
+                src="/salon/salon (1).jpeg"
+                alt="A woman at the Snails by Senara salon"
                 className="object-cover"
               />
             </div>
@@ -278,7 +297,7 @@ export function Storefront({ products, settings }: { products: Product[]; settin
             <span className="hidden text-[10px] uppercase tracking-[0.24em] text-[#8b717b] sm:block">{products.length} designs</span>
           </div>
 
-          <div className="grid gap-x-6 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid gap-x-6 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} add={add} />
             ))}
@@ -331,9 +350,9 @@ export function Storefront({ products, settings }: { products: Product[]; settin
           </div>
 
           <div className="mt-10 text-center">
-            <button type="button" className="button-dark">
+            <a href="https://share.google/RAz9zDqGMfamj9Ply" target="_blank" rel="noopener noreferrer" className="button-dark">
               Read More Reviews on Google
-            </button>
+            </a>
           </div>
         </section>
 
@@ -449,12 +468,15 @@ export function Storefront({ products, settings }: { products: Product[]; settin
             setCheckout(false);
             setPaymentMethod("bank");
           }}
-          complete={(orderNumber) => {
-            setCart([]);
-            setCheckout(false);
-            setPaymentMethod("bank");
-            setDone(orderNumber);
-          }}
+          onOrderCreated={handleOrderCreated}
+        />
+      )}
+
+      {pendingOrder && (
+        <PendingOrderConfirmation
+          access={pendingOrder}
+          whatsappNumber={WHATSAPP_BUSINESS_NUMBER}
+          onConfirmed={handleOrderConfirmed}
         />
       )}
 
@@ -464,12 +486,11 @@ export function Storefront({ products, settings }: { products: Product[]; settin
             <p className="eyebrow">Order received</p>
             <h2 className="display mt-3 text-4xl text-[#251d22]">Order Submitted</h2>
             <p className="mt-5 leading-7 text-[#6e6065]">
-              Thank you for your order! Your order and payment slip have been received successfully.
+              Thank you. Your confirmation has been recorded.
             </p>
             <p className="mt-6 text-lg font-semibold text-[#251d22]">Order Number: #{done}</p>
-            <p className="mt-2 text-sm text-[#8e6a76]">Status: Pending Approval</p>
             <p className="mt-6 text-sm leading-6 text-[#6e6065]">
-              Your payment and order will be reviewed and processed after the required approval.
+              This confirms your statement that you sent the order through WhatsApp. It does not confirm WhatsApp delivery or payment receipt; the company will review both manually.
             </p>
             <button type="button" onClick={() => setDone(null)} className="button-dark mt-7">
               Back to the collection
@@ -560,9 +581,8 @@ function ProductCard({ product, add }: { product: Product; add: (p: Product, s: 
                 type="button" 
                 disabled={sold} 
                 onClick={() => add(product, size, quantity)} 
-                className="flex-1 button-dark px-4 py-2.5 font-medium text-sm transition-all hover:shadow-lg active:scale-95 disabled:cursor-not-allowed disabled:bg-[#b7a7ad] disabled:hover:shadow-none"
+                className="flex-1 button-dark px-3 py-1.5 font-medium text-xs transition-all hover:shadow-lg active:scale-95 disabled:cursor-not-allowed disabled:bg-[#b7a7ad] disabled:hover:shadow-none"
               >
-                <span className="inline-block mr-2">🛒</span>
                 {sold ? "Sold Out" : "Add to Cart"}
               </button>
             </div>
@@ -684,11 +704,11 @@ function Totals({ subtotal, fee }: { subtotal: number; fee: number }) {
   );
 }
 
-function Checkout({ cart, subtotal, settings, close, complete }: { cart: CartItem[]; subtotal: number; settings: Settings; close: () => void; complete: (n: string) => void }) {
+function Checkout({ cart, subtotal, settings, close, onOrderCreated }: { cart: CartItem[]; subtotal: number; settings: Settings; close: () => void; onOrderCreated: (access: OrderAccess) => void }) {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const submissionStarted = useRef(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [formData, setFormData] = useState({ name: "", phone: "", address: "", notes: "" });
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
@@ -729,8 +749,8 @@ function Checkout({ cart, subtotal, settings, close, complete }: { cart: CartIte
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submissionStarted.current) return;
     setError("");
-    setSuccess("");
 
     // Validate all fields
     const errors: Record<string, string> = {};
@@ -760,6 +780,7 @@ function Checkout({ cart, subtotal, settings, close, complete }: { cart: CartIte
       return;
     }
 
+    submissionStarted.current = true;
     setLoading(true);
 
     try {
@@ -770,13 +791,33 @@ function Checkout({ cart, subtotal, settings, close, complete }: { cart: CartIte
       form.append("notes", formData.notes);
       form.append("slip", file);
       form.append("items", JSON.stringify(cart.map((item) => ({ product_id: item.id, selected_size: item.selectedSize, quantity: item.quantity }))));
-
-      console.log("Submitting order with details:", formData);
+      const attempt = getOrCreateOrderAttempt();
+      const messageTemplate = formatOrderMessage({
+        orderNumber: "__ORDER_REFERENCE__",
+        customerName: formData.name,
+        phone: formData.phone,
+        deliveryAddress: formData.address,
+        specialNotes: formData.notes,
+        items: cart.map((item) => ({
+          name: item.name,
+          size: item.selectedSize,
+          quantity: item.quantity,
+          totalPrice: item.price * item.quantity,
+        })),
+        subtotal,
+        deliveryFee: settings.delivery_fee,
+        total: subtotal + settings.delivery_fee,
+        bankName: settings.bank_name,
+        accountName: settings.account_name,
+        accountNumber: settings.account_number,
+        branch: settings.branch,
+      });
+      form.append("idempotencyKey", attempt.idempotencyKey);
+      form.append("resumeToken", attempt.resumeToken);
+      form.append("messageTemplate", messageTemplate);
 
       const response = await fetch("/api/orders", { method: "POST", body: form });
       const data = await response.json();
-      
-      console.log("API Response:", { status: response.status, ok: response.ok, data });
       
       if (!response.ok) {
         const errorMsg = data.error || `Order submission failed with status ${response.status}`;
@@ -786,51 +827,23 @@ function Checkout({ cart, subtotal, settings, close, complete }: { cart: CartIte
       if (!data.orderNumber) {
         throw new Error("No order number returned from server");
       }
-
-      // Order created successfully - show success message first
-      setSuccess(`✅ Order #${data.orderNumber} created successfully!`);
-      console.log("Order created:", data.orderNumber);
-
-      // Try to open WhatsApp with order details (but don't fail if it doesn't work)
-      try {
-        const message = [
-          "Hello, I would like to inquire about your services and products.",
-          "",
-          "Order Details:",
-          `Name: ${formData.name}`,
-          `Phone: ${formData.phone}`,
-          `Address: ${formData.address}`,
-          `Notes: ${formData.notes || "None"}`,
-          "",
-          "Items:",
-          ...cart.map((item) => `- ${item.name} (${item.selectedSize}) x ${item.quantity} = Rs. ${(item.price * item.quantity).toLocaleString("en-LK")}`),
-          "",
-          `Subtotal: Rs. ${subtotal.toLocaleString("en-LK")}`,
-          `Delivery Fee: Rs. ${settings.delivery_fee.toLocaleString("en-LK")}`,
-          `Total: Rs. ${(subtotal + settings.delivery_fee).toLocaleString("en-LK")}`,
-          "",
-          `Payment Slip: ${file.name}`,
-          `Bank: ${settings.bank_name}`,
-          `Account Name: ${settings.account_name}`,
-          `Account Number: ${settings.account_number}`,
-          `Branch: ${settings.branch}`,
-          "",
-          "Please confirm my order and payment details.",
-        ].join("\n");
-
-        await openWhatsAppOrder(settings.whatsapp_number, message, file);
-      } catch (whatsappErr) {
-        console.warn("WhatsApp opening failed (non-critical):", whatsappErr);
-        setSuccess(prev => prev + "\n\n📱 Opening WhatsApp separately to confirm order...");
+      if (typeof data.resumeToken !== "string" || !/^[0-9a-f]{64}$/i.test(data.resumeToken)) {
+        throw new Error("The server did not return valid order recovery details.");
       }
 
-      // Complete the checkout and reset form
-      complete(data.orderNumber);
+      console.log("Order created:", data.orderNumber);
+      const access: OrderAccess = {
+        orderNumber: String(data.orderNumber),
+        resumeToken: data.resumeToken,
+      };
+      saveOrderAccess(access);
+      onOrderCreated(access);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
-      console.error("Checkout error:", message, err);
+      console.warn("Checkout submission failed:", message);
       setError(message || "Order submission failed. Please try again.");
     } finally {
+      submissionStarted.current = false;
       setLoading(false);
     }
   }
@@ -949,12 +962,6 @@ function Checkout({ cart, subtotal, settings, close, complete }: { cart: CartIte
                 </div>
               )}
               
-              {success && (
-                <div className="rounded-lg border border-green-300 bg-green-50 p-4 text-sm text-green-700">
-                  <p className="font-semibold">✅ Success</p>
-                  <p className="mt-1">{success}</p>
-                </div>
-              )}
             </div>
 
             <aside className="rounded-[24px] border border-[#e9dfe4] bg-[#f8f0f2] p-6">
