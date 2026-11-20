@@ -43,9 +43,10 @@ npm run build
 
 1. Push this repository and create a new Netlify site from it.
 2. Use build command `npm run build` and publish directory `.next` (Netlify detects Next.js automatically; install its Next.js runtime if prompted).
-3. Add the three values from `.env.example` in **Site configuration > Environment variables**. Keep `SUPABASE_SERVICE_ROLE_KEY` secret.
-4. In Supabase Auth, add the Netlify URL and your custom domain to Redirect URLs/Site URL.
-5. Configure the custom domain in Netlify and update the Supabase Auth URLs once DNS is live.
+3. By default, checkout uses WhatsApp only and the storefront uses the local demo catalog. Orders and payment slips are not saved, and customers must attach slips manually in WhatsApp.
+4. To enable Supabase-backed checkout and catalog, set `NEXT_PUBLIC_CHECKOUT_MODE` to `supabase` for the build and add the three values from `.env.example` in **Site configuration > Environment variables**. Keep `SUPABASE_SERVICE_ROLE_KEY` secret and available to server functions. Redeploy after changing variables.
+5. In Supabase Auth, add the Netlify URL and your custom domain to Redirect URLs/Site URL.
+6. Configure the custom domain in Netlify and update the Supabase Auth URLs once DNS is live.
 
 ## Business-owner configuration still required
 

@@ -90,7 +90,7 @@ export async function POST(request: Request) {
     const sb = supabaseServer();
     if (!sb) {
       return NextResponse.json(
-        { error: "Order submission requires the Supabase server configuration." },
+        { error: "Order submission requires the Supabase server configuration.", code: "SUPABASE_NOT_CONFIGURED" },
         { status: 503 }
       );
     }

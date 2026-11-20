@@ -1,4 +1,5 @@
 import { demoProducts, placeholderSettings } from "@/lib/demo";
+import { whatsappOnly } from "@/lib/checkout-mode";
 import { supabaseServer } from "@/lib/supabase/server";
 import type { Product, Settings } from "@/types";
 
@@ -11,6 +12,10 @@ const fallbackSettings: Settings = {
 };
 
 export async function getStorefront(): Promise<{ products: Product[]; settings: Settings }> {
+  if (whatsappOnly) {
+    return { products: demoProducts, settings: fallbackSettings };
+  }
+
   const sb = supabaseServer();
   
   // If no Supabase connection or error, use demo products

@@ -3,6 +3,7 @@ import Image from "next/image";
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CartItem, Product, Settings, Size } from "@/types";
 import { ImageZoom } from "./image-zoom";
+import { whatsappOnly as useWhatsAppOnly } from "@/lib/checkout-mode";
 import { formatOrderMessage } from "@/lib/whatsapp-sharing";
 import { PendingOrderConfirmation } from "./pending-order-confirmation";
 import {
@@ -106,16 +107,19 @@ export function Storefront({ products, settings }: { products: Product[]; settin
   const [menu, setMenu] = useState(false);
   const [done, setDone] = useState<string | null>(null);
   const [pendingOrder, setPendingOrder] = useState<OrderAccess | null>(null);
+  const [whatsappOnlyDone, setWhatsappOnlyDone] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = sessionStorage.getItem("snails-cart");
     if (saved) setCart(JSON.parse(saved));
-    const savedOrder = localStorage.getItem(PENDING_ORDER_STORAGE_KEY);
-    const access = readOrderAccess(savedOrder);
-    if (access) {
-      setPendingOrder(access);
-    } else if (savedOrder) {
-      localStorage.removeItem(PENDING_ORDER_STORAGE_KEY);
+    if (!useWhatsAppOnly) {
+      const savedOrder = localStorage.getItem(PENDING_ORDER_STORAGE_KEY);
+      const access = readOrderAccess(savedOrder);
+      if (access) {
+        setPendingOrder(access);
+      } else if (savedOrder) {
+        localStorage.removeItem(PENDING_ORDER_STORAGE_KEY);
+      }
     }
   }, []);
 
@@ -131,6 +135,13 @@ export function Storefront({ products, settings }: { products: Product[]; settin
     localStorage.removeItem(ORDER_WHATSAPP_OPENED_KEY);
     setPendingOrder(null);
     setDone(orderNumber);
+  }, []);
+
+  const handleWhatsAppOnlyConfirmed = useCallback((orderNumber: string) => {
+    localStorage.removeItem(ORDER_ATTEMPT_STORAGE_KEY);
+    setCart([]);
+    setCheckout(false);
+    setWhatsappOnlyDone(orderNumber);
   }, []);
 
   useEffect(() => {
@@ -275,9 +286,8 @@ export function Storefront({ products, settings }: { products: Product[]; settin
               <h2 className="display mt-4 text-[3.2rem] leading-[0.95] text-[#251d22] sm:text-[4.1rem]">Meet Senara</h2>
 
               <p className="mt-6 max-w-[720px] text-lg leading-8 text-[#4d4045]">
-                <span className="font-semibold text-[#251d22]">[ABOUT SENARA]</span> Share Senara&apos;s personal story, nail and lash passion,
-                and salon journey here. Snails by Senara is a Nails | Lashes beauty brand, with this collection lovingly focused on
-                press-on nails.
+                Snails by Senara is a beauty brand dedicated to nails and lashes, blending creativity, elegance and personal expression.
+                Discover thoughtfully curated beauty essentials designed to inspire confidence and celebrate every individual&apos;s unique style.
               </p>
 
               <div className="mt-8 flex items-center gap-4">
@@ -469,6 +479,7 @@ export function Storefront({ products, settings }: { products: Product[]; settin
             setPaymentMethod("bank");
           }}
           onOrderCreated={handleOrderCreated}
+          onWhatsAppOnlyConfirmed={handleWhatsAppOnlyConfirmed}
         />
       )}
 
@@ -493,6 +504,21 @@ export function Storefront({ products, settings }: { products: Product[]; settin
               This confirms your statement that you sent the order through WhatsApp. It does not confirm WhatsApp delivery or payment receipt; the company will review both manually.
             </p>
             <button type="button" onClick={() => setDone(null)} className="button-dark mt-7">
+              Back to the collection
+            </button>
+          </div>
+        </div>
+      )}
+      {whatsappOnlyDone && (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-black/45 p-5">
+          <div role="dialog" aria-modal="true" aria-labelledby="whatsapp-only-done" className="max-w-md bg-white p-8 text-center shadow-xl">
+            <p className="eyebrow">WhatsApp order</p>
+            <h2 id="whatsapp-only-done" className="display mt-3 text-4xl text-[#251d22]">Thank you</h2>
+            <p className="mt-5 leading-7 text-[#6e6065]">Reference: <strong>{whatsappOnlyDone}</strong></p>
+            <p className="mt-6 text-sm leading-6 text-[#6e6065]">
+              Your confirmation was not saved on this website. The company will review your WhatsApp message and payment manually; delivery and payment have not been verified.
+            </p>
+            <button type="button" onClick={() => setWhatsappOnlyDone(null)} className="button-dark mt-7">
               Back to the collection
             </button>
           </div>
@@ -704,13 +730,16 @@ function Totals({ subtotal, fee }: { subtotal: number; fee: number }) {
   );
 }
 
-function Checkout({ cart, subtotal, settings, close, onOrderCreated }: { cart: CartItem[]; subtotal: number; settings: Settings; close: () => void; onOrderCreated: (access: OrderAccess) => void }) {
+function Checkout({ cart, subtotal, settings, close, onOrderCreated, onWhatsAppOnlyConfirmed }: { cart: CartItem[]; subtotal: number; settings: Settings; close: () => void; onOrderCreated: (access: OrderAccess) => void; onWhatsAppOnlyConfirmed: (orderNumber: string) => void }) {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const submissionStarted = useRef(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({ name: "", phone: "", address: "", notes: "" });
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [whatsappOnly, setWhatsappOnly] = useState<{ orderNumber: string; message: string } | null>(null);
+  const [whatsappOpened, setWhatsappOpened] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
 
   const validateField = (name: string, value: string) => {
     const errors: Record<string, string> = { ...validationErrors };
@@ -784,13 +813,6 @@ function Checkout({ cart, subtotal, settings, close, onOrderCreated }: { cart: C
     setLoading(true);
 
     try {
-      const form = new FormData();
-      form.append("name", formData.name);
-      form.append("phone", formData.phone);
-      form.append("address", formData.address);
-      form.append("notes", formData.notes);
-      form.append("slip", file);
-      form.append("items", JSON.stringify(cart.map((item) => ({ product_id: item.id, selected_size: item.selectedSize, quantity: item.quantity }))));
       const attempt = getOrCreateOrderAttempt();
       const messageTemplate = formatOrderMessage({
         orderNumber: "__ORDER_REFERENCE__",
@@ -812,6 +834,23 @@ function Checkout({ cart, subtotal, settings, close, onOrderCreated }: { cart: C
         accountNumber: settings.account_number,
         branch: settings.branch,
       });
+
+      if (useWhatsAppOnly) {
+        const orderNumber = `WA-${attempt.idempotencyKey}`;
+        const message = messageTemplate.replaceAll("__ORDER_REFERENCE__", orderNumber);
+        setWhatsappOnly({ orderNumber, message });
+        window.open(wa(WHATSAPP_BUSINESS_NUMBER, message), "_blank", "noopener,noreferrer");
+        setWhatsappOpened(true);
+        return;
+      }
+
+      const form = new FormData();
+      form.append("name", formData.name);
+      form.append("phone", formData.phone);
+      form.append("address", formData.address);
+      form.append("notes", formData.notes);
+      form.append("slip", file);
+      form.append("items", JSON.stringify(cart.map((item) => ({ product_id: item.id, selected_size: item.selectedSize, quantity: item.quantity }))));
       form.append("idempotencyKey", attempt.idempotencyKey);
       form.append("resumeToken", attempt.resumeToken);
       form.append("messageTemplate", messageTemplate);
@@ -820,6 +859,14 @@ function Checkout({ cart, subtotal, settings, close, onOrderCreated }: { cart: C
       const data = await response.json();
       
       if (!response.ok) {
+        if (response.status === 503 && data.code === "SUPABASE_NOT_CONFIGURED") {
+          const orderNumber = `WA-${attempt.idempotencyKey}`;
+          setWhatsappOnly({
+            orderNumber,
+            message: messageTemplate.replaceAll("__ORDER_REFERENCE__", orderNumber),
+          });
+          return;
+        }
         const errorMsg = data.error || `Order submission failed with status ${response.status}`;
         throw new Error(errorMsg);
       }
@@ -846,6 +893,53 @@ function Checkout({ cart, subtotal, settings, close, onOrderCreated }: { cart: C
       submissionStarted.current = false;
       setLoading(false);
     }
+  }
+
+  if (whatsappOnly) {
+    return (
+      <div className="fixed inset-0 z-40 overflow-y-auto bg-[#fffdfd] p-5">
+        <section className="mx-auto my-8 w-full max-w-xl rounded-2xl border border-[#e9dfe4] bg-white p-6 shadow-xl sm:p-8">
+          <p className="eyebrow">WhatsApp-only checkout</p>
+          <h2 className="display mt-3 text-3xl text-[#251d22]">Complete your order on WhatsApp</h2>
+          <p className="mt-4 text-sm text-[#6e6065]">Reference: <strong className="text-[#251d22]">{whatsappOnly.orderNumber}</strong></p>
+          <p role="status" className="mt-5 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
+            Your order and payment slip are not saved to the website and cannot be recovered here after refresh. Send both through WhatsApp.
+          </p>
+          <a
+            href={wa(WHATSAPP_BUSINESS_NUMBER, whatsappOnly.message)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setWhatsappOpened(true)}
+            className="button-dark mt-6 w-full text-center"
+          >
+            Open / reopen WhatsApp
+          </a>
+          <p className="mt-3 text-sm leading-6 text-[#6e6065]">
+            Attach your payment slip image manually in WhatsApp, send the pre-filled message, then return here. Your slip is not attached automatically.
+          </p>
+          <label className="mt-6 flex items-start gap-3 rounded-xl border border-[#e9dfe4] p-4 text-sm leading-6 text-[#3b2d35]">
+            <input
+              type="checkbox"
+              checked={confirmed}
+              onChange={(event) => setConfirmed(event.target.checked)}
+              className="mt-1 h-4 w-4 accent-[#694653]"
+            />
+            <span>I confirm that I have attached my payment slip and sent my order details through WhatsApp.</span>
+          </label>
+          <button
+            type="button"
+            disabled={!whatsappOpened || !confirmed}
+            onClick={() => onWhatsAppOnlyConfirmed(whatsappOnly.orderNumber)}
+            className="button-dark mt-5 w-full disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Confirm Order
+          </button>
+          <button type="button" onClick={() => setWhatsappOnly(null)} className="mt-5 text-sm underline text-[#251d22]">
+            Back to checkout
+          </button>
+        </section>
+      </div>
+    );
   }
 
   return (
@@ -953,6 +1047,11 @@ function Checkout({ cart, subtotal, settings, close, onOrderCreated }: { cart: C
                   </p>
                 )}
                 {validationErrors.file && <p className="mt-1 text-sm text-red-600">{validationErrors.file}</p>}
+                {useWhatsAppOnly && (
+                  <p className="mt-2 text-xs text-[#6e6065]">
+                    This file will not be uploaded. Attach it manually in WhatsApp.
+                  </p>
+                )}
               </label>
 
               {error && (
