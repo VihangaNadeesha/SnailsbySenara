@@ -1,6 +1,6 @@
 # Snails by Senara
 
-A premium, mobile-first Next.js storefront for the Snails by Senara press-on nail collection. It keeps customers on one page, with a cart drawer and an in-place manual bank-transfer checkout, while Supabase provides products, orders, storage, and staff authorization.
+A premium, mobile-first Next.js storefront for the Snails by Senara press-on nail collection. Checkout uses WhatsApp by default; Supabase-backed products, orders, storage, and staff authorization are optional.
 
 ## Stack
 
@@ -11,18 +11,21 @@ A premium, mobile-first Next.js storefront for the Snails by Senara press-on nai
 ## Local setup
 
 1. Install Node.js 20+ and run `npm install`.
-2. Copy `.env.example` to `.env.local` and set the three Supabase values.
-3. Create a Supabase project, then run `supabase/migrations/20260902000000_initial_schema.sql` in the Supabase SQL editor (or use the Supabase CLI).
-4. Create the first user in **Authentication > Users**. Then add their auth UUID to `public.profiles` with a role of `ADMIN`:
+2. Run `npm run dev`, then visit `http://localhost:3000`. WhatsApp-only checkout needs no Supabase environment variables.
+
+For the optional Supabase-backed mode:
+
+1. Copy `.env.example` to `.env.local`, set the three Supabase values, and set `NEXT_PUBLIC_CHECKOUT_MODE=supabase`.
+2. Set up the database and storage using the applicable migrations in `supabase/migrations/`.
+3. Create the first user in **Authentication > Users**. Then add their auth UUID to `public.profiles` with a role of `ADMIN`:
 
    ```sql
    insert into public.profiles (id, role) values ('AUTH_USER_UUID', 'ADMIN');
    ```
 
-5. Insert one `business_settings` row and set all placeholder values. Add products and optional product images to the `product_images` public bucket; store each object path in `product_images.storage_path`.
-6. Run `npm run dev`, then visit `http://localhost:3000`. The staff console is at `/admin`.
+4. Insert one `business_settings` row and set all placeholder values. Add products and optional product images to the `product_images` public bucket; store each object path in `product_images.storage_path`. The staff console is at `/admin`.
 
-Without Supabase environment variables, the storefront intentionally shows clearly demo-labelled in-code sample products so the visual experience can be reviewed; order submission also returns a demo order number. Configure Supabase before production.
+WhatsApp-only mode uses the local sample catalog. Orders and payment slips are not saved to the website; customers must attach their slips manually in WhatsApp.
 
 ## Storage and security
 
@@ -43,11 +46,10 @@ npm run build
 
 1. Push this repository and create a new Netlify site from it.
 2. Use build command `npm run build` and publish directory `.next` (Netlify detects Next.js automatically; install its Next.js runtime if prompted).
-3. By default, checkout uses WhatsApp only and the storefront uses the local demo catalog. Orders and payment slips are not saved, and customers must attach slips manually in WhatsApp.
-4. To enable Supabase-backed checkout and catalog, set `NEXT_PUBLIC_CHECKOUT_MODE` to `supabase` for the build and add the three values from `.env.example` in **Site configuration > Environment variables**. Keep `SUPABASE_SERVICE_ROLE_KEY` secret and available to server functions. Redeploy after changing variables.
-5. In Supabase Auth, add the Netlify URL and your custom domain to Redirect URLs/Site URL.
-6. Configure the custom domain in Netlify and update the Supabase Auth URLs once DNS is live.
+3. For WhatsApp-only checkout, remove unused Supabase variables from **Site configuration > Environment variables**, and leave `NEXT_PUBLIC_CHECKOUT_MODE` unset. Redeploy after changing variables. Check the local sample catalog and prices before launch.
+4. To enable Supabase-backed checkout and catalog instead, set `NEXT_PUBLIC_CHECKOUT_MODE` to `supabase` for the build and add the three values from `.env.example` in Netlify. Keep `SUPABASE_SERVICE_ROLE_KEY` secret and available to server functions. In Supabase Auth, add the Netlify URL and custom domain to Redirect URLs/Site URL.
+5. If Netlify's secret scanner fails, inspect the reported variable names and file paths. Do not disable scanning or expose server-only keys. Rotate any exposed secret.
 
 ## Business-owner configuration still required
 
-Replace all bracketed placeholders in the single `business_settings` row: bank details, delivery information/fee, WhatsApp number, Google review URL, and social URLs. Add real product imagery, product records, Senara's approved story/images, and approved FAQ answers before launch. Do not add real bank data to source code.
+For WhatsApp-only mode, review the local catalog, delivery fee, bank details, and WhatsApp number before launch. In Supabase mode, configure the `business_settings` row and product records. Review the imagery, story, and FAQ answers before launch.

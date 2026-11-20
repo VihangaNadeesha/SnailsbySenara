@@ -3,7 +3,7 @@
 ## ✅ What's Done
 
 - ✅ Supabase project created (VihangaNadeesha's Project)
-- ✅ Project URL: https://tcjwvnxshhwsmibdwcoh.supabase.co
+- ✅ Project URL: https://your-project.supabase.co
 - ✅ Database schema prepared
 - ✅ SQL files created for you to run
 - ✅ Documentation and guides ready
@@ -57,7 +57,7 @@
 1. Open: `.env.local`
 2. Find this section:
    ```
-   NEXT_PUBLIC_SUPABASE_URL=https://tcjwvnxshhwsmibdwcoh.supabase.co
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
    NEXT_PUBLIC_SUPABASE_ANON_KEY=tcjwvnxshhwsmibdwcoh
    SUPABASE_SERVICE_ROLE_KEY=your-server-only-service-role-key
    ```
