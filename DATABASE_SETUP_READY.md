@@ -3,7 +3,7 @@
 ## ✅ All Done! Here's What Was Set Up:
 
 ### 1. **Supabase Credentials Configured** ✅
-   - Project URL: https://tcjwvnxshhwsmibdwcoh.supabase.co
+   - Project URL: <your-supabase-project-url>
    - Service Role Key: Added to `.env.local`
    - File: `.env.local`
 

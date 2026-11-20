@@ -68,7 +68,7 @@ IMPORTANT CREDENTIALS TO SAVE:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Project URL:
-https://xxxxxxxxxxxx.supabase.co
+<your-supabase-project-url>
 
 Anon Key:
 [paste here]

@@ -33,7 +33,7 @@ Once your project is ready:
 
 ```
 📋 Project URL:
-https://xxxxxxxxxxxx.supabase.co
+<your-supabase-project-url>
 
 🔑 anon (public) key:
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
@@ -50,7 +50,7 @@ Edit the `.env.local` file in your project root:
 
 ```bash
 # Replace YOUR VALUES with the credentials from Step 2
-NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=<your-supabase-project-url>
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 

@@ -95,7 +95,7 @@ The key location typically looks like:
 Update `.env.local` with both keys:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://tcjwvnxshhwsmibdwcoh.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=<your-supabase-project-url>
 NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_C3aYLxXGB3LD0_BGsF8XEw_opivQayv
 SUPABASE_SERVICE_ROLE_KEY=sb_private_... (the one you find)
 ```
