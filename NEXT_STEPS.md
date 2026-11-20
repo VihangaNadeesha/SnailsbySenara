@@ -3,7 +3,7 @@
 ## ✅ What's Done
 
 - ✅ Supabase project created (VihangaNadeesha's Project)
-- ✅ Project URL: https://tcjwvnxshhwsmibdwcoh.supabase.co
+- ✅ Project URL: <your-supabase-project-url>
 - ✅ Database schema prepared
 - ✅ SQL files created for you to run
 - ✅ Documentation and guides ready
@@ -14,7 +14,7 @@
 ## 🎬 What To Do Next (In Order)
 
 ### **Step 1: Create Database Tables** ⏱️ 2 minutes
-1. Go to Supabase dashboard: https://app.supabase.com
+1. Go to Supabase dashboard: <your-supabase-project-url>m
 2. Select your project
 3. SQL Editor → New Query
 4. Copy entire file: `supabase/schema.sql`
@@ -57,7 +57,7 @@
 1. Open: `.env.local`
 2. Find this section:
    ```
-   NEXT_PUBLIC_SUPABASE_URL=https://tcjwvnxshhwsmibdwcoh.supabase.co
+   NEXT_PUBLIC_SUPABASE_URL=<your-supabase-project-url>
    NEXT_PUBLIC_SUPABASE_ANON_KEY=tcjwvnxshhwsmibdwcoh
    SUPABASE_SERVICE_ROLE_KEY=your-server-only-service-role-key
    ```

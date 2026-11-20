@@ -9,7 +9,7 @@ PROJECT OVERVIEW
 Your Supabase Project:
 ┌─────────────────────────────────────────────────────────────┐
 │ Project: VihangaNadeesha's Project                          │
-│ URL: https://tcjwvnxshhwsmibdwcoh.supabase.co              │
+│ URL: <your-supabase-project-url>              │
 │ Status: ✅ Healthy                                           │
 │ Region: Configured                                           │
 └─────────────────────────────────────────────────────────────┘
@@ -203,7 +203,7 @@ CREDENTIALS TO SAVE
 After Step 6, you'll have:
 
 Project URL:
-  https://tcjwvnxshhwsmibdwcoh.supabase.co
+  <your-supabase-project-url>
 
 Anon Key:
   [Copy from Settings → API]

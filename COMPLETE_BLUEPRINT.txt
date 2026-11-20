@@ -60,7 +60,7 @@ CODE CONFIGURATION:
   └─ Shopping cart integration ready
 
 ✓ .env.local
-  └─ NEXT_PUBLIC_SUPABASE_URL = https://tcjwvnxshhwsmibdwcoh.supabase.co
+  └─ NEXT_PUBLIC_SUPABASE_URL = <your-supabase-project-url>
   └─ Ready for anon key and service role key
 
 ASSETS:
@@ -77,7 +77,7 @@ DATABASE:
 ════════════════════════════════════════════════════════════════════════════
 
 NAME:   VihangaNadeesha's Project
-URL:    https://tcjwvnxshhwsmibdwcoh.supabase.co
+URL:    <your-supabase-project-url>
 STATUS: ✅ Healthy & Ready
 
 

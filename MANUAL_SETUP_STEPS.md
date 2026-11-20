@@ -2,7 +2,7 @@
 
 ## Your Project Details
 - **Project Name:** VihangaNadeesha's Project
-- **Project URL:** https://tcjwvnxshhwsmibdwcoh.supabase.co
+- **Project URL:** <your-supabase-project-url>
 - **Status:** ✅ Healthy
 
 ---
@@ -10,7 +10,7 @@
 ## STEP 1: Create Database Tables
 
 1. **Open Supabase Dashboard:**
-   - Go to: https://app.supabase.com/
+   - Go to: <your-supabase-project-url>m/
    - Select: "VihangaNadeesha's Project"
 
 2. **SQL Editor:**
@@ -179,7 +179,7 @@ SELECT id, 'product-images/nail-21.png', 0 FROM products WHERE slug = 'sunset-om
    - Click: **API**
 
 2. **Copy These Values:**
-   - **Project URL:** `https://tcjwvnxshhwsmibdwcoh.supabase.co` ✓
+   - **Project URL:** `<your-supabase-project-url>` ✓
    - **anon (public) key:** (looks like: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`)
    - **service_role key:** (looks like: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`)
 
@@ -190,7 +190,7 @@ SELECT id, 'product-images/nail-21.png', 0 FROM products WHERE slug = 'sunset-om
 **Edit `.env.local` in your project:**
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://tcjwvnxshhwsmibdwcoh.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=<your-supabase-project-url>
 NEXT_PUBLIC_SUPABASE_ANON_KEY=paste-your-anon-key-here
 SUPABASE_SERVICE_ROLE_KEY=paste-your-service-role-key-here
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key

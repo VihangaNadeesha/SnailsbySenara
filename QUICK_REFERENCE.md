@@ -3,7 +3,7 @@
 ## Your Project
 ```
 Name:    VihangaNadeesha's Project
-URL:     https://tcjwvnxshhwsmibdwcoh.supabase.co
+URL:     <your-supabase-project-url>
 Status:  ✅ Healthy & Ready
 Region:  Configured
 ```
@@ -55,7 +55,7 @@ Copy these 3 values:
 
 Then paste into `.env.local`:
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://tcjwvnxshhwsmibdwcoh.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=<your-supabase-project-url>
 NEXT_PUBLIC_SUPABASE_ANON_KEY=paste-here
 SUPABASE_SERVICE_ROLE_KEY=paste-here
 ```

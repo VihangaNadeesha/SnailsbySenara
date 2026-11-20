@@ -10,7 +10,7 @@
 
 ✅ Supabase Project Created
    Project: VihangaNadeesha's Project
-   URL: https://tcjwvnxshhwsmibdwcoh.supabase.co
+   URL: <your-supabase-project-url>
    Status: Healthy & Ready
 
 ✅ 21 Nail Product Images Ready

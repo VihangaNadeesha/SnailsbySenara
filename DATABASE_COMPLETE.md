@@ -9,7 +9,7 @@ Your **Snails by Senara** e-commerce platform now has a **complete, production-r
 ## ✅ Everything That's Been Set Up
 
 ### 1. Supabase Project Fully Configured
-- ✅ Project URL: `https://tcjwvnxshhwsmibdwcoh.supabase.co`
+- ✅ Project URL: `<your-supabase-project-url>`
 - ✅ All credentials retrieved and stored in `.env.local`
 - ✅ Service Role Key securely configured for backend access
 
