@@ -11,8 +11,8 @@ All automated steps have been successfully completed!
 
 Your environment file has been successfully updated with:
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://tcjwvnxshhwsmibdwcoh.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_C3aYLxXGB3LD0_BGsF8XEw_opivQayv
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-publishable-key
 SUPABASE_SERVICE_ROLE_KEY=your-server-only-service-role-key-get-from-settings
 ```
 

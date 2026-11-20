@@ -2,7 +2,7 @@
 
 ## Project Info
 - **Project Name:** VihangaNadeesha's Project
-- **Project URL:** https://tcjwvnxshhwsmibdwcoh.supabase.co
+- **Project URL:** https://your-project.supabase.co
 - **Status:** ✅ Created & Healthy
 
 ---
@@ -106,12 +106,12 @@ After setup, verify in Supabase:
 
 **Project URL:**
 ```
-https://tcjwvnxshhwsmibdwcoh.supabase.co
+https://your-project.supabase.co
 ```
 
 **Your API Keys** (from Settings → API):
 ```
-NEXT_PUBLIC_SUPABASE_URL=https://tcjwvnxshhwsmibdwcoh.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=[COPY FROM SUPABASE DASHBOARD]
 SUPABASE_SERVICE_ROLE_KEY=[COPY FROM SUPABASE DASHBOARD]
 ```

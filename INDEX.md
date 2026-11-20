@@ -180,7 +180,7 @@ http://localhost:3000/#shop
 
 ```
 Project Name: VihangaNadeesha's Project
-Project URL:  https://tcjwvnxshhwsmibdwcoh.supabase.co
+Project URL:  https://your-project.supabase.co
 Status:       ✅ Healthy & Ready
 ```
 

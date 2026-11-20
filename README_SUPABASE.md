@@ -6,7 +6,7 @@ Everything you need to connect your Snails by Senara app to a production-grade d
 
 ### Your Supabase Project
 - **Name:** VihangaNadeesha's Project
-- **URL:** https://tcjwvnxshhwsmibdwcoh.supabase.co
+- **URL:** https://your-project.supabase.co
 - **Status:** ✅ Healthy and ready to use
 
 ### What's Included

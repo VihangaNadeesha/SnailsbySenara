@@ -80,7 +80,7 @@ The key location typically looks like:
 ┌─ Project API Keys ─────────────────┐
 │                                    │
 │ anon (public)                      │
-│ sb_publishable_C3aYLxXGB3L...     │ ← You found this
+│ your-publishable-key...     │ ← You found this
 │                                    │
 │ service_role (private)             │
 │ sb_private_or_eyJ...              │ ← Find this one
@@ -95,8 +95,8 @@ The key location typically looks like:
 Update `.env.local` with both keys:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://tcjwvnxshhwsmibdwcoh.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_C3aYLxXGB3LD0_BGsF8XEw_opivQayv
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-publishable-key
 SUPABASE_SERVICE_ROLE_KEY=sb_private_... (the one you find)
 ```
 

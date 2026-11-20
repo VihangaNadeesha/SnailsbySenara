@@ -223,32 +223,32 @@ INSERT INTO products (name, description, price, inventory, is_available, display
 ### Instructions:
 
 1. Click **"New Query"** button
-2. **Copy-Paste this SQL:**
+2. Replace `https://your-project.supabase.co` with your own Supabase project URL in this SQL, then copy and paste it:
 
 ```sql
 -- Link product images
 INSERT INTO product_images (product_id, image_url, display_order) VALUES
-(1, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-01.png', 1),
-(2, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-02.png', 1),
-(3, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-03.png', 1),
-(4, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-04.png', 1),
-(5, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-05.png', 1),
-(6, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-06.png', 1),
-(7, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-07.png', 1),
-(8, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-08.png', 1),
-(9, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-09.png', 1),
-(10, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-10.png', 1),
-(11, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-11.png', 1),
-(12, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-12.png', 1),
-(13, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-13.png', 1),
-(14, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-14.png', 1),
-(15, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-15.png', 1),
-(16, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-16.png', 1),
-(17, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-17.png', 1),
-(18, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-18.png', 1),
-(19, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-19.png', 1),
-(20, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-20.png', 1),
-(21, 'https://tcjwvnxshhwsmibdwcoh.supabase.co/storage/v1/object/public/product-images/nail-21.png', 1);
+(1, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-01.png', 1),
+(2, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-02.png', 1),
+(3, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-03.png', 1),
+(4, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-04.png', 1),
+(5, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-05.png', 1),
+(6, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-06.png', 1),
+(7, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-07.png', 1),
+(8, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-08.png', 1),
+(9, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-09.png', 1),
+(10, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-10.png', 1),
+(11, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-11.png', 1),
+(12, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-12.png', 1),
+(13, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-13.png', 1),
+(14, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-14.png', 1),
+(15, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-15.png', 1),
+(16, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-16.png', 1),
+(17, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-17.png', 1),
+(18, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-18.png', 1),
+(19, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-19.png', 1),
+(20, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-20.png', 1),
+(21, 'https://your-project.supabase.co/storage/v1/object/public/product-images/nail-21.png', 1);
 ```
 
 3. Click **"Run"** button
@@ -288,7 +288,7 @@ INSERT INTO product_images (product_id, image_url, display_order) VALUES
 3. Update it to have EXACTLY these 3 lines:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://tcjwvnxshhwsmibdwcoh.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=paste-your-anon-key-here
 SUPABASE_SERVICE_ROLE_KEY=paste-your-service-role-key-here
 ```
