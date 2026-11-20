@@ -132,7 +132,7 @@ def execute_sql_via_curl(sql_statement):
         import pg8000.native
         
         # Parse Supabase URL to get connection details
-        # https://your-project.supabase.co -> tcjwvnxshhwsmibdwcoh.db.supabase.co
+        # <your-supabase-project-url> -> <project-id>.db.supabase.co
         url_parts = SUPABASE_URL.replace('https://', '').replace('http://', '').split('.')
         project_id = url_parts[0]
         
