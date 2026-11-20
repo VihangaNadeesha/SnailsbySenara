@@ -3,6 +3,7 @@ import Image from "next/image";
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CartItem, Product, Settings, Size } from "@/types";
 import { ImageZoom } from "./image-zoom";
+import { whatsappOnly as useWhatsAppOnly } from "@/lib/checkout-mode";
 import { formatOrderMessage } from "@/lib/whatsapp-sharing";
 import { PendingOrderConfirmation } from "./pending-order-confirmation";
 import {
@@ -111,12 +112,14 @@ export function Storefront({ products, settings }: { products: Product[]; settin
   useEffect(() => {
     const saved = sessionStorage.getItem("snails-cart");
     if (saved) setCart(JSON.parse(saved));
-    const savedOrder = localStorage.getItem(PENDING_ORDER_STORAGE_KEY);
-    const access = readOrderAccess(savedOrder);
-    if (access) {
-      setPendingOrder(access);
-    } else if (savedOrder) {
-      localStorage.removeItem(PENDING_ORDER_STORAGE_KEY);
+    if (!useWhatsAppOnly) {
+      const savedOrder = localStorage.getItem(PENDING_ORDER_STORAGE_KEY);
+      const access = readOrderAccess(savedOrder);
+      if (access) {
+        setPendingOrder(access);
+      } else if (savedOrder) {
+        localStorage.removeItem(PENDING_ORDER_STORAGE_KEY);
+      }
     }
   }, []);
 
@@ -810,13 +813,6 @@ function Checkout({ cart, subtotal, settings, close, onOrderCreated, onWhatsAppO
     setLoading(true);
 
     try {
-      const form = new FormData();
-      form.append("name", formData.name);
-      form.append("phone", formData.phone);
-      form.append("address", formData.address);
-      form.append("notes", formData.notes);
-      form.append("slip", file);
-      form.append("items", JSON.stringify(cart.map((item) => ({ product_id: item.id, selected_size: item.selectedSize, quantity: item.quantity }))));
       const attempt = getOrCreateOrderAttempt();
       const messageTemplate = formatOrderMessage({
         orderNumber: "__ORDER_REFERENCE__",
@@ -838,6 +834,23 @@ function Checkout({ cart, subtotal, settings, close, onOrderCreated, onWhatsAppO
         accountNumber: settings.account_number,
         branch: settings.branch,
       });
+
+      if (useWhatsAppOnly) {
+        const orderNumber = `WA-${attempt.idempotencyKey}`;
+        const message = messageTemplate.replaceAll("__ORDER_REFERENCE__", orderNumber);
+        setWhatsappOnly({ orderNumber, message });
+        window.open(wa(WHATSAPP_BUSINESS_NUMBER, message), "_blank", "noopener,noreferrer");
+        setWhatsappOpened(true);
+        return;
+      }
+
+      const form = new FormData();
+      form.append("name", formData.name);
+      form.append("phone", formData.phone);
+      form.append("address", formData.address);
+      form.append("notes", formData.notes);
+      form.append("slip", file);
+      form.append("items", JSON.stringify(cart.map((item) => ({ product_id: item.id, selected_size: item.selectedSize, quantity: item.quantity }))));
       form.append("idempotencyKey", attempt.idempotencyKey);
       form.append("resumeToken", attempt.resumeToken);
       form.append("messageTemplate", messageTemplate);
@@ -890,7 +903,7 @@ function Checkout({ cart, subtotal, settings, close, onOrderCreated, onWhatsAppO
           <h2 className="display mt-3 text-3xl text-[#251d22]">Complete your order on WhatsApp</h2>
           <p className="mt-4 text-sm text-[#6e6065]">Reference: <strong className="text-[#251d22]">{whatsappOnly.orderNumber}</strong></p>
           <p role="status" className="mt-5 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm leading-6 text-amber-900">
-            Order saving is temporarily unavailable. Your order and payment slip have not been saved to the website and cannot be recovered here after refresh. Send both through WhatsApp.
+            Your order and payment slip are not saved to the website and cannot be recovered here after refresh. Send both through WhatsApp.
           </p>
           <a
             href={wa(WHATSAPP_BUSINESS_NUMBER, whatsappOnly.message)}
@@ -899,7 +912,7 @@ function Checkout({ cart, subtotal, settings, close, onOrderCreated, onWhatsAppO
             onClick={() => setWhatsappOpened(true)}
             className="button-dark mt-6 w-full text-center"
           >
-            Open WhatsApp
+            Open / reopen WhatsApp
           </a>
           <p className="mt-3 text-sm leading-6 text-[#6e6065]">
             Attach your payment slip image manually in WhatsApp, send the pre-filled message, then return here. Your slip is not attached automatically.
@@ -1034,6 +1047,11 @@ function Checkout({ cart, subtotal, settings, close, onOrderCreated, onWhatsAppO
                   </p>
                 )}
                 {validationErrors.file && <p className="mt-1 text-sm text-red-600">{validationErrors.file}</p>}
+                {useWhatsAppOnly && (
+                  <p className="mt-2 text-xs text-[#6e6065]">
+                    This file will not be uploaded. Attach it manually in WhatsApp.
+                  </p>
+                )}
               </label>
 
               {error && (
